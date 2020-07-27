@@ -141,6 +141,8 @@
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="BaseWindow.h" />
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="Checkbox.h" />
     <ClInclude Include="Combobox.h" />
     <ClInclude Include="Editbox.h" />
     <ClInclude Include="Includes.h" />
@@ -149,6 +151,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="Checkbox.cpp" />
     <ClCompile Include="Combobox.cpp" />
     <ClCompile Include="Editbox.cpp" />
     <ClCompile Include="Listbox.cpp" />

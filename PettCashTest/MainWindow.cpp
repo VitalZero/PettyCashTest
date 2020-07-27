@@ -61,24 +61,38 @@ void MainWindow::OnCreate(CREATESTRUCT* pcs)
 	comboDept->AddItem(L"Veinte");
 	comboDept->AddItem(L"Treinta");
 
-	HDC hdc = GetDC( wnd );
+	checkIva = std::make_unique<Checkbox>();
+	checkIva->Create(wnd, Controls::CheckTax, L"IVA", 274, 10, 50);
+
+	buttonAgregar = std::make_unique<Button>();
+	buttonAgregar->Create(wnd, Controls::buttonAgregar, L"Agregar", 274, 40);
+
+	radioOk = std::make_unique<Radiobutton>();
+	radioOk->Create(wnd, Controls::CheckRet, L"Retencion", 274, 70, 50);
+
+	SetGuiFont();
+}
+
+void MainWindow::SetGuiFont()
+{
+	HDC hdc = GetDC(wnd);
 	int fontSize = -MulDiv(9, GetDeviceCaps(hdc, LOGPIXELSY), 72);
-	ReleaseDC( wnd, hdc );
+	ReleaseDC(wnd, hdc);
 
 	font = CreateFont(
-		fontSize, 
-		0, 
-		0, 
-		0, 
-		FW_DONTCARE, 
-		FALSE, 
-		FALSE, 
-		FALSE, 
+		fontSize,
+		0,
+		0,
+		0,
+		FW_DONTCARE,
+		FALSE,
+		FALSE,
+		FALSE,
 		DEFAULT_CHARSET,
-		OUT_OUTLINE_PRECIS, 
-		CLIP_DEFAULT_PRECIS, 
-		CLEARTYPE_QUALITY, 
-		VARIABLE_PITCH, 
+		OUT_OUTLINE_PRECIS,
+		CLIP_DEFAULT_PRECIS,
+		CLEARTYPE_QUALITY,
+		VARIABLE_PITCH,
 		L"Segoe UI");
 
 	EnumChildWindows(wnd, SetChildWndFontProc, (LPARAM)font);

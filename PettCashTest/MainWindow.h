@@ -7,6 +7,8 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include "Listbox.h"
 #include "Editbox.h"
 #include "Combobox.h"
+#include "Checkbox.h"
+#include "Button.h"
 #include <memory>
 
 class MainWindow : public BaseWindow<MainWindow>
@@ -24,10 +26,14 @@ public:
 
 private:
 	void OnCreate(CREATESTRUCT* pcs);
+	void SetGuiFont();
 
 private:
 	HFONT font = nullptr;
 	std::unique_ptr<ListBox> list;
 	std::unique_ptr<Editbox> editVendor;
 	std::unique_ptr<Combobox> comboDept;
+	std::unique_ptr<Checkbox> checkIva;
+	std::unique_ptr<Button> buttonAgregar;
+	std::unique_ptr<Radiobutton> radioOk;
 };

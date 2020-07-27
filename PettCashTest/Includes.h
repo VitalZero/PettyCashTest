@@ -17,5 +17,6 @@ enum Controls
 	EditAmount = 1700,
 	CheckTax = 1800,
 	CheckRet = 1900,
-	ListBoxId = 2000,
+	buttonAgregar = 2000,
+	ListBoxId = 2100,
 };
