@@ -1,6 +1,6 @@
 #include "EditBox.h"
 
-int Editbox::GetLength() const
+size_t Editbox::GetLength() const
 {
   return SendMessage(wnd, WM_GETTEXTLENGTH, 0, 0);
 }
@@ -10,7 +10,7 @@ std::wstring Editbox::GetText()
   std::wstring tmp;
   tmp.reserve(GetLength() + 1);
 
-  if ( GetWindowText(wnd, &tmp[0], GetLength() + 1) > 0 )
+  if ( GetWindowText(wnd, &tmp[0], (int)(GetLength() + 1)) > 0 )
   {
     return tmp;
   }

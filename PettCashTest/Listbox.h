@@ -19,7 +19,7 @@ public:
   void OnMeasureItem(MEASUREITEMSTRUCT* pmis);
   void OnDrawItem(DRAWITEMSTRUCT* pdis);
   std::wstring GetItem(int index);
-  int GetItemLength(int index);
+  size_t GetItemLength(int index);
   int GetItemData(int index) const;
   HWND Window() const { return wnd; }
 

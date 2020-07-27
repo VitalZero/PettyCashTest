@@ -5,7 +5,7 @@
 class Editbox
 {
 public:
-	int GetLength() const;
+	size_t GetLength() const;
   std::wstring GetText();
   void SetText(const std::wstring& text);
   void Create(

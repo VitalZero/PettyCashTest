@@ -15,7 +15,7 @@ public:
     int height = 23);
   void AddItem(const std::wstring text);
   std::wstring GetItem(int index);
-  int GetItemLength(int index) const;
+  size_t GetItemLength(int index) const;
   HWND Window() const { return wnd; }
 
 private:

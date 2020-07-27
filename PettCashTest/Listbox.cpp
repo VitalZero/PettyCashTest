@@ -2,7 +2,7 @@
 
 int ListBox::Count() const
 {
-  return SendMessage(wnd, LB_GETCOUNT, 0, 0);
+  return (int)SendMessage(wnd, LB_GETCOUNT, 0, 0);
 }
 
 void ListBox::Create(HWND parent, int id, int x, int y, int width, int height, bool ownerDrawn)
@@ -39,7 +39,7 @@ void ListBox::Create(HWND parent, int id, int x, int y, int width, int height, b
 
 void ListBox::AddItem(const std::wstring text)
 {
-  lastAdded = SendMessage(wnd, LB_ADDSTRING, 0, (LPARAM)text.c_str());
+  lastAdded = (int)SendMessage(wnd, LB_ADDSTRING, 0, (LPARAM)text.c_str());
 }
 
 void ListBox::SetItemData(int index, int level)
@@ -54,7 +54,7 @@ void ListBox::OnMeasureItem(MEASUREITEMSTRUCT* pmis)
 
 void ListBox::OnDrawItem(DRAWITEMSTRUCT* pdis)
 {
-  int cch;
+  unsigned int cch;
   wchar_t buffer[MAX_PATH];
   TEXTMETRIC tm;
 
@@ -76,7 +76,7 @@ void ListBox::OnDrawItem(DRAWITEMSTRUCT* pdis)
       GetTextMetrics(pdis->hDC, &tm);
       int yPos = (pdis->rcItem.bottom + pdis->rcItem.top - tm.tmHeight) / 2;
 
-      cch = wcslen(buffer);
+      cch = (unsigned int)wcslen(buffer);
 
       if ( pdis->itemState & ODS_SELECTED )
       {
@@ -120,12 +120,12 @@ std::wstring ListBox::GetItem(int index)
   return std::wstring();
 }
 
-int ListBox::GetItemLength(int index)
+size_t ListBox::GetItemLength(int index)
 {
   return SendMessage(wnd, CB_GETLBTEXTLEN, (WPARAM)index, 0);
 }
 
 int ListBox::GetItemData(int index) const
 {
-  return SendMessage(wnd, LB_GETITEMDATA, (WPARAM)index, 0);
+  return (int)SendMessage(wnd, LB_GETITEMDATA, (WPARAM)index, 0);
 }
