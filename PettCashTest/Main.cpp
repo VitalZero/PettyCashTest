@@ -2,6 +2,7 @@
 //
 #include "App.h"
 #include <cstring>
+#include <array>
 
 int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 {
@@ -15,15 +16,16 @@ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 	}
 	catch (std::exception& e)
 	{
-		const char* ble = e.what();
-		wchar_t msg[MAX_PATH] = {};
+		std::array<wchar_t, MAX_PATH> errorMsg;
 
-		for ( int i = 0; ble[i] != '\0'; ++i )
+		const char* msg = e.what();
+
+		for ( int i = 0; msg[i] != '\0'; ++i )
 		{
-			msg[i] = ble[i];
+			errorMsg[i] = msg[i];
 		}
 
-		MessageBox(nullptr, msg, L"Error!", MB_ICONERROR);
+		MessageBox(nullptr, errorMsg.data(), L"Error!", MB_ICONERROR);
 	}
 
 	return 0;

@@ -1,4 +1,7 @@
 #pragma once
+#define _WIN32_WINNT 0X0601
+#include <sdkddkver.h>
+
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX
 #include <windows.h>

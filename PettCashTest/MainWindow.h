@@ -9,6 +9,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include "Combobox.h"
 #include "Checkbox.h"
 #include "Button.h"
+#include "Label.h"
 #include <memory>
 
 class MainWindow : public BaseWindow<MainWindow>
@@ -36,4 +37,5 @@ private:
 	std::unique_ptr<Checkbox> checkIva;
 	std::unique_ptr<Button> buttonAgregar;
 	std::unique_ptr<Radiobutton> radioOk;
+	std::unique_ptr<Label> labelHola;
 };

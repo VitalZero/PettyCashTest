@@ -18,7 +18,8 @@ LRESULT MainWindow::HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam)
 		break;
 
 		case WM_CTLCOLORSTATIC:
-			result = COLOR_WINDOW+1;
+			SetBkMode((HDC)wparam, TRANSPARENT);
+			result = (LRESULT)(HBRUSH)GetStockObject(NULL_BRUSH); // COLOR_WINDOW + 1;
 			wasHandled = true;
 		break;
 	
@@ -65,10 +66,13 @@ void MainWindow::OnCreate(CREATESTRUCT* pcs)
 	checkIva->Create(wnd, Controls::CheckTax, L"IVA", 274, 10, 50);
 
 	buttonAgregar = std::make_unique<Button>();
-	buttonAgregar->Create(wnd, Controls::buttonAgregar, L"Agregar", 274, 40);
+	buttonAgregar->CreateCommandLink(wnd, Controls::buttonAgregar, L"Agregar", 274, 40, 120, 58, L"Hola mundo!");
 
 	radioOk = std::make_unique<Radiobutton>();
-	radioOk->Create(wnd, Controls::CheckRet, L"Retencion", 274, 70, 50);
+	radioOk->Create(wnd, Controls::CheckRet, L"Retencion", 274, 150, 80);
+
+	labelHola = std::make_unique<Label>();
+	labelHola->Create(wnd, Controls::StaticLbl, L"Hola!", 274, 184, 50);
 
 	SetGuiFont();
 }
