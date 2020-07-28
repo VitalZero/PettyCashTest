@@ -66,7 +66,7 @@ void MainWindow::OnCreate(CREATESTRUCT* pcs)
 	checkIva->Create(wnd, Controls::CheckTax, L"IVA", 274, 10, 50);
 
 	buttonAgregar = std::make_unique<Button>();
-	buttonAgregar->CreateCommandLink(wnd, Controls::buttonAgregar, L"Agregar", 274, 40, 120, 58, L"Hola mundo!");
+	buttonAgregar->Create(wnd, Controls::buttonAgregar, L"Agregar", 274, 40, 120, 58);
 
 	radioOk = std::make_unique<Radiobutton>();
 	radioOk->Create(wnd, Controls::CheckRet, L"Retencion", 274, 150, 80);

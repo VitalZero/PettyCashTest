@@ -60,7 +60,7 @@ void Button::CreateCommandLink(HWND parent, int id, const std::wstring& text, in
   
   if (defPush)
   {
-    style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON;
+    style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | BS_DEFCOMMANDLINK;
   }
 
   wnd = CreateWindow(
