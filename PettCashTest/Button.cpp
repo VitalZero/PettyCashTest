@@ -53,7 +53,7 @@ void Button::CreateCommandLink(HWND parent, int id, const std::wstring& text, in
 {
   if (wnd)
   {
-    throw std::exception("Button already created.");
+    throw std::exception("Commandlink already created.");
   }
   
   int style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | BS_COMMANDLINK;
@@ -78,7 +78,7 @@ void Button::CreateCommandLink(HWND parent, int id, const std::wstring& text, in
 
   if (!wnd)
   {
-    throw std::exception("Button could not be created.");
+    throw std::exception("Commandlink could not be created.");
   }
 
   if (!note.empty())
