@@ -25,8 +25,8 @@ public:
     {
       return itr->second(wnd, msg, wparam, lparam);
     }
-    
-    return DefWindowProc(wnd, msg, wparam, lparam);
+   
+    return map.at(-1)(wnd, msg, wparam, lparam);
   }
 private:
   MessageMap map;

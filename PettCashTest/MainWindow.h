@@ -30,6 +30,7 @@ private:
 	LRESULT OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnDestroy(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnCtlColorStatic(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT DefaultProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);	
 	void SetGuiFont();
 
 private:

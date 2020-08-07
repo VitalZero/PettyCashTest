@@ -6,6 +6,7 @@ MainWindow::MainWindow()
 	msgHandler.Register(WM_CREATE, &MainWindow::OnCreate, this);
 	msgHandler.Register(WM_DESTROY, &MainWindow::OnDestroy, this);
 	msgHandler.Register(WM_CTLCOLORSTATIC, &MainWindow::OnCtlColorStatic, this);
+	msgHandler.Register(-1, &MainWindow::DefaultProc, this);
 }
 
 LRESULT MainWindow::HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -65,6 +66,11 @@ LRESULT MainWindow::OnCtlColorStatic(HWND wnd, UINT msg, WPARAM wparam, LPARAM l
 {
 	SetBkMode((HDC)wparam, TRANSPARENT);
 	return (LRESULT)(HBRUSH)GetStockObject(NULL_BRUSH);
+}
+
+LRESULT MainWindow::DefaultProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	return DefWindowProc(wnd, msg, wparam, lparam);
 }
 
 void MainWindow::SetGuiFont()
