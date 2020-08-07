@@ -6,7 +6,7 @@ MainWindow::MainWindow()
 	msgHandler.Register(WM_CREATE, &MainWindow::OnCreate, this);
 	msgHandler.Register(WM_DESTROY, &MainWindow::OnDestroy, this);
 	msgHandler.Register(WM_CTLCOLORSTATIC, &MainWindow::OnCtlColorStatic, this);
-	msgHandler.Register(-1, &MainWindow::DefaultProc, this);
+	msgHandler.Register(0, &MainWindow::DefaultProc, this);
 }
 
 LRESULT MainWindow::HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam)
