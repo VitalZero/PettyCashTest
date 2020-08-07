@@ -3,40 +3,14 @@
 
 MainWindow::MainWindow()
 {
+	msgHandler.Register(WM_CREATE, &MainWindow::OnCreate, this);
+	msgHandler.Register(WM_DESTROY, &MainWindow::OnDestroy, this);
+	msgHandler.Register(WM_CTLCOLORSTATIC, &MainWindow::OnCtlColorStatic, this);
 }
 
 LRESULT MainWindow::HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	LRESULT result = 0;
-	bool wasHandled = false;
-
-	switch ( msg )
-	{
-		case WM_CREATE:
-			OnCreate((CREATESTRUCT*)lparam);
-			result = 1;
-		break;
-
-		case WM_CTLCOLORSTATIC:
-			SetBkMode((HDC)wparam, TRANSPARENT);
-			result = (LRESULT)(HBRUSH)GetStockObject(NULL_BRUSH); // COLOR_WINDOW + 1;
-			wasHandled = true;
-		break;
-	
-		case WM_DESTROY:
-			DeleteObject(font);
-			PostQuitMessage(0);
-			result = 0;
-			wasHandled = true;
-		break;
-	}
-
-	if ( !wasHandled )
-	{
-		result = DefWindowProc(wnd, msg, wparam, lparam);
-	}
-
-	return result;
+	return msgHandler.Handle(wnd, msg, wparam, lparam);
 }
 
 BOOL CALLBACK MainWindow::SetChildWndFontProc(HWND wndChild, LPARAM font)
@@ -45,8 +19,9 @@ BOOL CALLBACK MainWindow::SetChildWndFontProc(HWND wndChild, LPARAM font)
 	return TRUE;
 }
 
-void MainWindow::OnCreate(CREATESTRUCT* pcs)
+LRESULT MainWindow::OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
+
 	list = std::make_unique<ListBox>();
 	list->Create(wnd, Controls::ListBoxId, 10, 40, 200, 300, false);
 	list->AddItem(L"Uno");
@@ -75,6 +50,21 @@ void MainWindow::OnCreate(CREATESTRUCT* pcs)
 	labelHola->Create(wnd, Controls::StaticLbl, L"Hola!", 274, 184, 50);
 
 	SetGuiFont();
+
+	return 1;
+}
+
+LRESULT MainWindow::OnDestroy(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	DeleteObject(font);
+	PostQuitMessage(0);
+	return 0;
+}
+
+LRESULT MainWindow::OnCtlColorStatic(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	SetBkMode((HDC)wparam, TRANSPARENT);
+	return (LRESULT)(HBRUSH)GetStockObject(NULL_BRUSH);
 }
 
 void MainWindow::SetGuiFont()

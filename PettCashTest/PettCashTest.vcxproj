@@ -149,6 +149,7 @@
     <ClInclude Include="Listbox.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Label.h" />
+    <ClInclude Include="MsgHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />

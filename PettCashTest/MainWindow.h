@@ -11,6 +11,7 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #include "Button.h"
 #include "Label.h"
 #include <memory>
+#include "MsgHandler.h"
 
 class MainWindow : public BaseWindow<MainWindow>
 {
@@ -26,7 +27,9 @@ public:
 	//static BOOL CALLBACK StaticAboutDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam );
 
 private:
-	void OnCreate(CREATESTRUCT* pcs);
+	LRESULT OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnDestroy(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnCtlColorStatic(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	void SetGuiFont();
 
 private:
@@ -38,4 +41,5 @@ private:
 	std::unique_ptr<Button> buttonAgregar;
 	std::unique_ptr<Radiobutton> radioOk;
 	std::unique_ptr<Label> labelHola;
+	MsgHandler msgHandler;
 };
