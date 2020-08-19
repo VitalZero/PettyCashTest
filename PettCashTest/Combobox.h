@@ -12,7 +12,7 @@ public:
     int x,
     int y,
     int width,
-    int height = 23);
+    int height = apparentMinHeight);
   void AddItem(const std::wstring text);
   std::wstring GetItem(int index);
   size_t GetItemLength(int index) const;
@@ -23,4 +23,5 @@ private:
 	int width;
 	int height;
 	int lastAdded;
+  static constexpr int apparentMinHeight = 100;
 };

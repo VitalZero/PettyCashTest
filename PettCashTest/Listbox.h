@@ -12,7 +12,7 @@ public:
     int x,
     int y,
     int width,
-    int height,
+    int height = apparentMinHeight,
     bool ownerDrawn = false);
   void AddItem(const std::wstring text);
   void SetItemData(int index, int level);
@@ -28,4 +28,5 @@ private:
 	int width;
 	int height;
   int lastAdded;
+  static constexpr int apparentMinHeight = 69;
 };

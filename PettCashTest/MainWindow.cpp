@@ -7,6 +7,8 @@ MainWindow::MainWindow()
 	msgHandler.Register(WM_DESTROY, &MainWindow::OnDestroy, this);
 	msgHandler.Register(WM_CTLCOLORSTATIC, &MainWindow::OnCtlColorStatic, this);
 	msgHandler.Register(0, &MainWindow::DefaultProc, this);
+	msgHandler.Register(WM_MEASUREITEM, &MainWindow::OnMeasureItem, this);
+	msgHandler.Register(WM_DRAWITEM, &MainWindow::OnDrawItem, this);
 }
 
 LRESULT MainWindow::HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -23,10 +25,13 @@ BOOL CALLBACK MainWindow::SetChildWndFontProc(HWND wndChild, LPARAM font)
 void MainWindow::Init()
 {
 	list = std::make_unique<ListBox>();
-	list->Create(wnd, Controls::ListBoxId, 10, 40, 200, 300, false);
-	list->AddItem(L"Uno");
-	list->AddItem(L"Dos");
-	list->AddItem(L"Tres");
+	list->Create(wnd, Controls::ListBoxId, 10, 40, 200, 300, true);
+	list->AddItem(L"Dirección mantenimiento campo");
+	list->SetItemData(0, 0);
+	list->AddItem(L"Operación mantenimiento campo");
+	list->SetItemData(1, 0);
+	list->AddItem(L"Refacciones");
+	list->SetItemData(2, 1);
 
 	editVendor = std::make_unique<Editbox>();
 	editVendor->Create(wnd, Controls::EditVendor, 10, 10, 100);
@@ -73,6 +78,18 @@ LRESULT MainWindow::OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam)
 LRESULT MainWindow::DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	return DefWindowProc(wnd, msg, wparam, lparam);
+}
+
+LRESULT MainWindow::OnMeasureItem(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	list->OnMeasureItem((MEASUREITEMSTRUCT*)lparam);
+	return 0;
+}
+
+LRESULT MainWindow::OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	list->OnDrawItem((DRAWITEMSTRUCT*)lparam);
+	return TRUE;
 }
 
 void MainWindow::SetGuiFont()

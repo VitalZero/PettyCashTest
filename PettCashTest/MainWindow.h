@@ -1,7 +1,4 @@
 #pragma once
-#pragma comment(linker,"\"/manifestdependency:type='win32' \
-name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
-processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 #include "BaseWindow.h"
 #include "Listbox.h"
@@ -26,14 +23,14 @@ public:
 	//static BOOL CALLBACK StaticInputDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam );
 	//static BOOL CALLBACK StaticAboutDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam );
 
-protected:
-	void Init() override;
-
 private:
+	void Init() override;
 	LRESULT OnCreate(UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnDestroy(UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam);
-	LRESULT DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam);	
+	LRESULT DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnMeasureItem(UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam);
 	void SetGuiFont();
 
 private:

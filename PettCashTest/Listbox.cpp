@@ -55,7 +55,7 @@ void ListBox::OnMeasureItem(MEASUREITEMSTRUCT* pmis)
 void ListBox::OnDrawItem(DRAWITEMSTRUCT* pdis)
 {
   unsigned int cch;
-  wchar_t buffer[MAX_PATH];
+  wchar_t buffer[MAX_PATH] = { 0 };
   TEXTMETRIC tm;
 
   if ( pdis->itemID != -1 )
@@ -77,9 +77,11 @@ void ListBox::OnDrawItem(DRAWITEMSTRUCT* pdis)
       int yPos = (pdis->rcItem.bottom + pdis->rcItem.top - tm.tmHeight) / 2;
 
       cch = (unsigned int)wcslen(buffer);
+      COLORREF colorPen = RGB(100, 100, 100);
 
       if ( pdis->itemState & ODS_SELECTED )
       {
+        colorPen = RGB(255, 255, 255);
         SetTextColor(pdis->hDC, GetSysColor(COLOR_HIGHLIGHTTEXT));
         SetBkColor(pdis->hDC, GetSysColor(COLOR_HIGHLIGHT));
       }
@@ -92,13 +94,26 @@ void ListBox::OnDrawItem(DRAWITEMSTRUCT* pdis)
       WORD data = (WORD)SendMessage(pdis->hwndItem, LB_GETITEMDATA, pdis->itemID, 0);
       unsigned char level = (unsigned char)LOWORD(data);
       unsigned char state = (unsigned char)HIWORD(data);
-      const int xBitMap = 24;
+      const int xBitMap = 0;// 24;
       const int yBitMap = GetSystemMetrics(SM_CYSMICON);
       const int yBitPos = (pdis->rcItem.bottom + pdis->rcItem.top - yBitMap) / 2;
       int xOffset = 10 * level;
 
       ExtTextOut(pdis->hDC, pdis->rcItem.left + xOffset + xBitMap, yPos,
         ETO_OPAQUE, &pdis->rcItem, buffer, cch, 0);
+
+      if (level > 0)
+      {
+        LOGBRUSH lbrush = { 0 };
+        lbrush.lbColor = colorPen;
+        lbrush.lbStyle = BS_SOLID;
+        HPEN dotPen = ExtCreatePen(PS_COSMETIC | PS_ALTERNATE, 1, &lbrush, 0, nullptr);
+        MoveToEx(pdis->hDC, 2, yPos + tm.tmHeight / 2, nullptr);
+        HPEN oldPen = (HPEN)SelectObject(pdis->hDC, dotPen);
+        LineTo(pdis->hDC, pdis->rcItem.left + xOffset + xBitMap - 2, yPos + tm.tmHeight / 2);
+        SelectObject(pdis->hDC, oldPen);
+        DeleteObject(oldPen);
+      }
 
       //ImageList_Draw(sysImgListSM, 3/*level*/, pdis->hDC, pdis->rcItem.left + xOffset + 4, yBitPos, ILD_TRANSPARENT);
     }
