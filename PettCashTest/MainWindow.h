@@ -26,11 +26,14 @@ public:
 	//static BOOL CALLBACK StaticInputDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam );
 	//static BOOL CALLBACK StaticAboutDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam );
 
+protected:
+	void Init() override;
+
 private:
-	LRESULT OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
-	LRESULT OnDestroy(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
-	LRESULT OnCtlColorStatic(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
-	LRESULT DefaultProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);	
+	LRESULT OnCreate(UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnDestroy(UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam);	
 	void SetGuiFont();
 
 private:

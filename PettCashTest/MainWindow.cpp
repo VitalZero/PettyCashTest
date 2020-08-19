@@ -11,7 +11,7 @@ MainWindow::MainWindow()
 
 LRESULT MainWindow::HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	return msgHandler.Handle(wnd, msg, wparam, lparam);
+	return msgHandler.Handle(msg, wparam, lparam);
 }
 
 BOOL CALLBACK MainWindow::SetChildWndFontProc(HWND wndChild, LPARAM font)
@@ -20,9 +20,8 @@ BOOL CALLBACK MainWindow::SetChildWndFontProc(HWND wndChild, LPARAM font)
 	return TRUE;
 }
 
-LRESULT MainWindow::OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
+void MainWindow::Init()
 {
-
 	list = std::make_unique<ListBox>();
 	list->Create(wnd, Controls::ListBoxId, 10, 40, 200, 300, false);
 	list->AddItem(L"Uno");
@@ -42,7 +41,7 @@ LRESULT MainWindow::OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	checkIva->Create(wnd, Controls::CheckTax, L"IVA", 274, 10, 50);
 
 	buttonAgregar = std::make_unique<Button>();
-	buttonAgregar->Create(wnd, Controls::buttonAgregar, L"Agregar", 274, 40, 120, 58);
+	buttonAgregar->CreateCommandLink(wnd, Controls::buttonAgregar, L"Agregar", 274, 40, 120, 58, L"Esto es una nota");
 
 	radioOk = std::make_unique<Radiobutton>();
 	radioOk->Create(wnd, Controls::CheckRet, L"Retencion", 274, 150, 80);
@@ -51,24 +50,27 @@ LRESULT MainWindow::OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	labelHola->Create(wnd, Controls::StaticLbl, L"Hola!", 274, 184, 50);
 
 	SetGuiFont();
+}
 
+LRESULT MainWindow::OnCreate(UINT msg, WPARAM wparam, LPARAM lparam)
+{
 	return 1;
 }
 
-LRESULT MainWindow::OnDestroy(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT MainWindow::OnDestroy(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	DeleteObject(font);
 	PostQuitMessage(0);
 	return 0;
 }
 
-LRESULT MainWindow::OnCtlColorStatic(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT MainWindow::OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	SetBkMode((HDC)wparam, TRANSPARENT);
 	return (LRESULT)(HBRUSH)GetStockObject(NULL_BRUSH);
 }
 
-LRESULT MainWindow::DefaultProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT MainWindow::DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	return DefWindowProc(wnd, msg, wparam, lparam);
 }
