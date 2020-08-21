@@ -18,7 +18,7 @@ public:
         std::placeholders::_2, std::placeholders::_3);
     }
   }
-  LRESULT Handle(UINT msg, WPARAM wparam, LPARAM lparam)
+  LRESULT Dispatch(UINT msg, WPARAM wparam, LPARAM lparam)
   {
     auto itr = map.find(msg);
     if(itr != map.end())

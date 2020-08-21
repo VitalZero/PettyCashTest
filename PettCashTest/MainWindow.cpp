@@ -6,22 +6,46 @@ MainWindow::MainWindow()
 	msgHandler.Register(WM_CREATE, &MainWindow::OnCreate, this);
 	msgHandler.Register(WM_DESTROY, &MainWindow::OnDestroy, this);
 	msgHandler.Register(WM_CTLCOLORSTATIC, &MainWindow::OnCtlColorStatic, this);
+	msgHandler.Register(WM_PAINT, &MainWindow::OnPaint, this);
 	msgHandler.Register(0, &MainWindow::DefaultProc, this);
+}
+
+void MainWindow::Init()
+{
+	lbDateStart = std::make_unique<Label>();
+	lbDateStart->Create(wnd, STATICLB, L"Fecha inicio", 11, 7, 80, 15);
+	edDateStart = std::make_unique<Editbox>();
+	edDateStart->Create(wnd, EDDATESTART, 11, 25, 80);
+	lbDateEnd = std::make_unique<Label>();
+	lbDateEnd->Create(wnd, STATICLB, L"Fecha fin", 96, 7, 80, 15);
+	edDateEnd = std::make_unique<Editbox>();
+	edDateEnd->Create(wnd, EDDATEEND, 96, 25, 80);
+	lbWeek = std::make_unique<Label>();
+	lbWeek->Create(wnd, STATICLB, L"Semana num", 182, 7, 80, 15);
+	edWeek = std::make_unique<Editbox>();
+	edWeek->Create(wnd, EDWEEK, 182, 25, 80);
+
+	lbDept = std::make_unique<Label>();
+	lbDept->Create(wnd, STATICLB, L"Departamento", 412, 7, 80, 15);
+	cbDept = std::make_unique<Combobox>();
+	cbDept->Create(wnd, CBDEPT, 412, 25, 300);
+
+	lbSectionInv = std::make_unique<Label>();
+	lbSectionInv->Create(wnd, STATICLB, L"Comprobantes", 11, 54, 80, 15);
+
+
+	SetGuiFont();
 }
 
 LRESULT MainWindow::HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	return msgHandler.Handle(msg, wparam, lparam);
+	return msgHandler.Dispatch(msg, wparam, lparam);
 }
 
 BOOL CALLBACK MainWindow::SetChildWndFontProc(HWND wndChild, LPARAM font)
 {
 	SendMessage(wndChild, WM_SETFONT, (WPARAM)font, TRUE);
 	return TRUE;
-}
-
-void MainWindow::Init()
-{
 }
 
 LRESULT MainWindow::OnCreate(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -40,6 +64,23 @@ LRESULT MainWindow::OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	SetBkMode((HDC)wparam, TRANSPARENT);
 	return (LRESULT)(HBRUSH)GetStockObject(NULL_BRUSH);
+}
+
+LRESULT MainWindow::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	PAINTSTRUCT ps;
+	HDC hdc = BeginPaint(wnd, &ps);
+
+	RECT rcEdge;
+	rcEdge.left = 95;
+	rcEdge.right = 712;
+	rcEdge.top = 63;
+	rcEdge.bottom = 64;
+
+	DrawEdge(hdc, &rcEdge, BDR_SUNKENINNER, BF_BOTTOM);
+
+	EndPaint(wnd, &ps);
+	return 0;
 }
 
 LRESULT MainWindow::DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam)

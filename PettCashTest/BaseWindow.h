@@ -37,6 +37,8 @@ public:
 protected:
 	HWND wnd;
 	HINSTANCE instance;
+	int x;
+	int y;
 	int width;
 	int height;
 };
@@ -62,9 +64,6 @@ HRESULT BaseWindow<DERIVED_T>::Create(
 	rc.top = y;
 	rc.bottom = height + y;
 	AdjustWindowRect(&rc, style, TRUE);
-
-	this->width = rc.right - rc.left;
-	this->height = rc.bottom - rc.top;
 
 	ATOM result = Register();
 	assert(result != 0);
