@@ -103,7 +103,7 @@ ATOM BaseWindow<DERIVED_T>::Register()
 	wcx.hInstance = instance;
 	wcx.lpszClassName = ClassName();
 	wcx.lpfnWndProc = DERIVED_T::WndProc;
-	wcx.hbrBackground = (HBRUSH)(COLOR_WINDOW);
+	wcx.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcx.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcx.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
 
