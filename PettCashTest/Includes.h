@@ -19,7 +19,7 @@
 #define EDINVDATE 1070
 #define EDINVNUM 1080
 #define EDAMOUNT 1090
-#define CBACOUNT 1100
+#define CBACCOUNT 1100
 #define EDTAX 1110
 #define EDRET 1120
 #define BTADD 1130
