@@ -34,7 +34,7 @@ void Editbox::Create(HWND parent, int id, int x, int y, int width, int height)
     WS_EX_CLIENTEDGE,
     L"EDIT",
     L"",
-    WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_LEFT,
+    style,
     x,
     y,
     width,
@@ -48,4 +48,14 @@ void Editbox::Create(HWND parent, int id, int x, int y, int width, int height)
   {
     throw std::exception("Editbox could not be created.");
   }
+}
+
+void Editbox::Disable() const
+{
+  EnableWindow(wnd, FALSE);
+}
+
+void Editbox::Enable() const
+{
+  EnableWindow(wnd, TRUE);
 }

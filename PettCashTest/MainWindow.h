@@ -32,9 +32,12 @@ private:
 
 	LRESULT DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam);
 	void SetGuiFont();
+	void CreateControls();
+	void CreateMainMenu();
 
 private:
 	HFONT font = nullptr;
+	HMENU mainMenu = nullptr;
 	// Data capture
 	std::unique_ptr<Editbox> edDateStart;
 	std::unique_ptr<Editbox> edDateEnd;

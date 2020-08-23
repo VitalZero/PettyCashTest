@@ -34,3 +34,7 @@
 #define EDDIFF 1210
 // List
 #define LSLIST 1220
+// Menu
+#define NEWMENU 2000
+#define OPENMENU 2010
+#define EXITMENU 2200

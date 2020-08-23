@@ -12,13 +12,11 @@ void Combobox::Create(HWND parent, int id, int x, int y, int width, int height)
     throw std::exception("ListBox already created.");
   }
 
-  DWORD styles = WS_TABSTOP | WS_CHILD | WS_VISIBLE | WS_OVERLAPPED | CBS_DROPDOWN | CBS_HASSTRINGS;
-
   wnd = CreateWindowEx(
     WS_EX_CLIENTEDGE,
     L"COMBOBOX",
     L"",
-    styles,
+    style,
     x,
     y,
     width,

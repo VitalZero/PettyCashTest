@@ -5,6 +5,12 @@
 class Combobox
 {
 public:
+  Combobox()
+    : style(WS_TABSTOP | WS_CHILD | WS_VISIBLE | WS_OVERLAPPED | CBS_DROPDOWN | CBS_HASSTRINGS)
+  {}
+  Combobox(DWORD style)
+    : style(style)
+  {}
   int Count() const;
   void Create(
     HWND parent,
@@ -23,5 +29,6 @@ private:
 	int width;
 	int height;
 	int lastAdded;
+  DWORD style;
   static constexpr int apparentMinHeight = 100;
 };
