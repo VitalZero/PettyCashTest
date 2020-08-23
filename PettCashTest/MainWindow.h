@@ -29,6 +29,8 @@ private:
 	LRESULT OnDestroy(UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnCommand(UINT msg, WPARAM wparam, LPARAM lparam);
+	void OnExit();
 
 	LRESULT DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam);
 	void SetGuiFont();

@@ -5,6 +5,8 @@
 
 using MsgFunction = std::function<LRESULT(UINT, WPARAM, LPARAM)>;
 using MessageMap = std::unordered_map<UINT, MsgFunction>;
+using CmdFunction = std::function<void(void)>;
+using CommandMap = std::unordered_map<UINT, CmdFunction>;
 
 class MsgHandler
 {
@@ -18,6 +20,14 @@ public:
         std::placeholders::_2, std::placeholders::_3);
     }
   }
+  template <class F, class T>
+  void Bind(UINT msg, F func, T* type)
+  {
+    if (cmdMap.find(msg) == cmdMap.end())
+    {
+      cmdMap[msg] = std::bind(func, type);
+    }
+  }
   LRESULT Dispatch(UINT msg, WPARAM wparam, LPARAM lparam)
   {
     auto itr = map.find(msg);
@@ -28,6 +38,15 @@ public:
    
     return map.at(0)(msg, wparam, lparam);
   }
+  void Dispatch(UINT idCtrl)
+  {
+    auto itr = cmdMap.find(idCtrl);
+    if (itr != cmdMap.end())
+    {
+      itr->second();
+    }
+  }
 private:
   MessageMap map;
+  CommandMap cmdMap;
 };

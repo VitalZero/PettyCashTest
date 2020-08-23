@@ -8,6 +8,8 @@ MainWindow::MainWindow()
 	msgHandler.Register(WM_CTLCOLORSTATIC, &MainWindow::OnCtlColorStatic, this);
 	msgHandler.Register(WM_PAINT, &MainWindow::OnPaint, this);
 	msgHandler.Register(0, &MainWindow::DefaultProc, this);
+	msgHandler.Register(WM_COMMAND, &MainWindow::OnCommand, this);
+	msgHandler.Bind(EXITMENU, &MainWindow::OnExit, this);
 }
 
 void MainWindow::Init()
@@ -82,6 +84,17 @@ LRESULT MainWindow::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
 
 	EndPaint(wnd, &ps);
 	return 0;
+}
+
+LRESULT MainWindow::OnCommand(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	msgHandler.Dispatch(LOWORD(wparam));
+	return 0;
+}
+
+void MainWindow::OnExit()
+{
+	DestroyWindow(wnd);
 }
 
 LRESULT MainWindow::DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -225,13 +238,24 @@ void MainWindow::CreateControls()
 
 void MainWindow::CreateMainMenu()
 {
-	mainMenu = ::CreateMenu();
-	HMENU fileMenu = ::CreateMenu();
+	mainMenu = CreateMenu();
+	HMENU fileMenu = CreatePopupMenu();
 	AppendMenu(fileMenu, MF_STRING, NEWMENU, L"Nuevo");
 	AppendMenu(fileMenu, MF_STRING, OPENMENU, L"Abrir");
+	AppendMenu(fileMenu, MF_STRING, SAVEMENU, L"Guardar");
+	AppendMenu(fileMenu, MF_STRING, SAVEASMENU, L"Guardar como");
+	AppendMenu(fileMenu, MF_SEPARATOR, -1, L"-");
+	AppendMenu(fileMenu, MF_STRING, PRINTMENU, L"Imprimir");
 	AppendMenu(fileMenu, MF_SEPARATOR, -1, L"-");
 	AppendMenu(fileMenu, MF_STRING, EXITMENU, L"Salir");
 	AppendMenu(mainMenu, MF_POPUP | MF_STRING, (UINT_PTR)fileMenu, L"Archivo");
+
+	HMENU editMenu = CreatePopupMenu();
+	AppendMenu(editMenu, MF_STRING, ADDDEPTMENU, L"Agregar departamento");
+	AppendMenu(editMenu, MF_STRING, ADDACTMENU, L"Agregar cuenta");
+	AppendMenu(editMenu, MF_SEPARATOR, -1, L"-");
+	AppendMenu(editMenu, MF_STRING, CFGMENU, L"Configuración");
+	AppendMenu(mainMenu, MF_POPUP | MF_STRING, (UINT_PTR)editMenu, L"Editar");
 
 	SetMenu(wnd, mainMenu);
 }
