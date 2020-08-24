@@ -9,6 +9,7 @@
 #include "Label.h"
 #include <memory>
 #include "MsgHandler.h"
+#include <vector>
 
 class MainWindow : public BaseWindow<MainWindow>
 {
@@ -18,12 +19,13 @@ public:
 public:
 	LPCWSTR ClassName() const override { return L"PettyCash"; }
 	LRESULT HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam) override;
-	static BOOL CALLBACK SetChildWndFontProc(HWND wndChild, LPARAM font);
 	//BOOL InputDlgProc( HWND hWndDlg, UINT msg, WPARAM wparam, LPARAM lparam );
 	//static BOOL CALLBACK StaticInputDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam );
 	//static BOOL CALLBACK StaticAboutDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam );
 
 private:
+	static BOOL CALLBACK SetChildWndFontProc(HWND wndChild, LPARAM font);
+	void ResetFields();
 	void Init() override;
 	LRESULT OnCreate(UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnDestroy(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -31,11 +33,15 @@ private:
 	LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnCommand(UINT msg, WPARAM wparam, LPARAM lparam);
 	void OnExit();
+	void OnNew();
 
 	LRESULT DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam);
 	void SetGuiFont();
 	void CreateControls();
 	void CreateMainMenu();
+
+private:
+	std::vector<HWND> children;
 
 private:
 	HFONT font = nullptr;

@@ -15,6 +15,7 @@ public:
     int width = 75,
     int height = 23,
     bool defPush = false);
+  HWND Window() const { return wnd; }
   void Enable(bool status) const;
   bool IsEnabled() const;
   void SetText(const std::wstring& text) const;

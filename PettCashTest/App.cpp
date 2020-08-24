@@ -9,7 +9,7 @@ HRESULT App::Init()
 		0,
 		CW_USEDEFAULT, 
 		CW_USEDEFAULT, 
-		750, 
+		740, 
 		500);
 
 	if ( FAILED( hr ) )
