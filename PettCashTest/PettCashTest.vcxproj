@@ -151,6 +151,7 @@
     <ClInclude Include="Label.h" />
     <ClInclude Include="MsgHandler.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Settings.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
@@ -162,6 +163,7 @@
     <ClCompile Include="Listbox.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="Settings.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PettCashTest.rc" />

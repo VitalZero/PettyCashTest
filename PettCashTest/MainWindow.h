@@ -19,6 +19,7 @@ public:
 public:
 	LPCWSTR ClassName() const override { return L"PettyCash"; }
 	LRESULT HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam) override;
+	void AppendControl() {}
 	//BOOL InputDlgProc( HWND hWndDlg, UINT msg, WPARAM wparam, LPARAM lparam );
 	//static BOOL CALLBACK StaticAboutDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam );
 
@@ -26,21 +27,20 @@ private:
 	static BOOL CALLBACK SetChildWndFontProc(HWND wndChild, LPARAM font);
 	static BOOL CALLBACK StaticConfigDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam);
 	BOOL ConfigDlgProc(HWND hWndDlg, UINT msg, WPARAM wparam, LPARAM lparam);
-	void ResetFields();
-	void Init() override;
 	LRESULT OnCreate(UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnDestroy(UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnCommand(UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam);
+	void ResetFields();
+	void Init() override;
 	void OnExit();
 	void OnNew();
 	void OnOpen();
 	void OnSave();
 	void OnSaveAs();
 	void OnConfig();
-
-	LRESULT DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam);
 	void SetGuiFont();
 	void CreateControls();
 	void CreateMainMenu();

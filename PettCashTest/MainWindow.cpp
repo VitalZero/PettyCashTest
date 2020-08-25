@@ -3,6 +3,7 @@
 #include <commdlg.h>
 #include <fstream>
 #include "resource.h"
+#include "Settings.h"
 
 MainWindow::MainWindow()
 {
@@ -26,6 +27,10 @@ void MainWindow::Init()
 {
 	CreateControls();
 	CreateMainMenu();
+	Settings settings;
+	settings.Load();
+	SetWindowText(wnd, (std::wstring(L"Petty Cash - ") + settings.GetOwner()).c_str());
+	edTotalAssigned->SetText((std::to_wstring(settings.GetAmount()).c_str()));
 
 	RECT rc = { 0 };
 	GetWindowRect(wnd, &rc);
@@ -351,6 +356,8 @@ void MainWindow::CreateControls()
 	edDiff->SetText(L"Disabled!");
 	children.push_back(edDiff->Window());
 
+	SetFocus(edDateStart->Window());
+
 	SetGuiFont();
 }
 
@@ -401,12 +408,31 @@ BOOL MainWindow::ConfigDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lpar
 	switch (msg)
 	{
 	case WM_INITDIALOG:
+	{
+		Settings settings;
+		settings.Load();
+		SetDlgItemInt(wndDlg, IDC_TOTAL, settings.GetAmount(), FALSE);
+		SetDlgItemText(wndDlg, IDC_CUSTODY, settings.GetOwner().c_str());
+	}
 		break;
 
 	case WM_COMMAND:
 		switch (LOWORD(wparam))
 		{
 		case IDOK:
+		{
+			Settings settings;
+			wchar_t buffer[MAX_PATH] = { 0 };
+			GetDlgItemText(wndDlg, IDC_CUSTODY, buffer, MAX_PATH);
+			std::wstring tmp(buffer);
+			settings.SetOwner(tmp);
+
+			GetDlgItemText(wndDlg, IDC_TOTAL, buffer, MAX_PATH);
+			tmp = buffer;
+			int amt = std::stoi(buffer);
+			settings.SetAmount(amt);
+			settings.Save();
+		}
 		case IDCANCEL:
 			EndDialog(wndDlg, LOWORD(wparam));
 			return TRUE;

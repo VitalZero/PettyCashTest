@@ -26,6 +26,7 @@ public:
     if (cmdMap.find(msg) == cmdMap.end())
     {
       cmdMap[msg] = std::bind(func, type);
+      //cmdMap.insert(std::bind(func, type));
     }
   }
   LRESULT Dispatch(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -41,8 +42,12 @@ public:
   void Dispatch(UINT idCtrl)
   {
     auto itr = cmdMap.find(idCtrl);
+
     if (itr != cmdMap.end())
     {
+      std::wstring info = L"cmdMap first: " + std::to_wstring(itr->first) + L"\n";
+      OutputDebugString(info.c_str());
+
       itr->second();
     }
   }
