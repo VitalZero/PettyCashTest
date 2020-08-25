@@ -48,6 +48,9 @@
     <ClInclude Include="MsgHandler.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -77,5 +80,10 @@
     <ClCompile Include="Label.cpp">
       <Filter>Archivos de origen</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PettCashTest.rc">
+      <Filter>Archivos de recursos</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

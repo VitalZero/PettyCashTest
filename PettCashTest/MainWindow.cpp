@@ -2,6 +2,7 @@
 #include "MainWindow.h"
 #include <commdlg.h>
 #include <fstream>
+#include "resource.h"
 
 MainWindow::MainWindow()
 {
@@ -15,6 +16,10 @@ MainWindow::MainWindow()
 	// commands
 	msgHandler.Bind(EXITMENU, &MainWindow::OnExit, this);
 	msgHandler.Bind(NEWMENU, &MainWindow::OnNew, this);
+	msgHandler.Bind(OPENMENU, &MainWindow::OnOpen, this);
+	msgHandler.Bind(SAVEMENU, &MainWindow::OnSave, this);
+	msgHandler.Bind(SAVEASMENU, &MainWindow::OnSaveAs, this);
+	msgHandler.Bind(CFGMENU, &MainWindow::OnConfig, this);
 }
 
 void MainWindow::Init()
@@ -50,14 +55,10 @@ void MainWindow::ResetFields()
 
 	for (auto& w : children)
 	{
-		GetClassName(w, &tmp[0], -1);
-
-		if (!(tmp.find(L"Button") != std::string::npos))
-		{
-			SetWindowText(w, L"");
-		}
-		SendMessage(list->Window(), LB_RESETCONTENT, 0, 0);
+		SetWindowText(w, L"");
 	}
+
+	SendMessage(list->Window(), LB_RESETCONTENT, 0, 0);
 }
 
 LRESULT MainWindow::OnCreate(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -121,6 +122,11 @@ void MainWindow::OnExit()
 
 void MainWindow::OnNew()
 {
+	ResetFields();
+}
+
+void MainWindow::OnOpen()
+{
 	wchar_t tmp[MAX_PATH] = { 0 };
 	OPENFILENAME ofn = { 0 };
 	ofn.lStructSize = sizeof(ofn);
@@ -129,12 +135,40 @@ void MainWindow::OnNew()
 	ofn.nMaxFile = MAX_PATH;
 	ofn.lpstrFile = tmp;
 	ofn.Flags = OFN_EXPLORER;
-	ofn.lpstrTitle = L"Nuevo archivo";
-	ofn.lpstrDefExt = L"txt";
 
-	if(GetOpenFileName(&ofn))
+	if (GetOpenFileName(&ofn))
 	{
 		ResetFields();
+		std::wifstream is;
+		is.open(tmp);
+
+		if (is)
+		{
+			std::wstring value;
+			std::getline(is >> std::ws, value);
+			MessageBox(wnd, value.data(), L"Archivo dice:", 0);
+		}
+		else
+		{
+			MessageBox(wnd, L"No se pudo crear el archivo", L"Error", 0);
+		}
+	}
+}
+
+void MainWindow::OnSave()
+{
+	wchar_t tmp[MAX_PATH] = { 0 };
+	OPENFILENAME ofn = { 0 };
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = wnd;
+	ofn.lpstrFilter = L"All files (*.*)\0*.*\0";
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrFile = tmp;
+	ofn.Flags = OFN_EXPLORER;
+	ofn.lpstrDefExt = L"txt";
+
+	if (GetSaveFileName(&ofn))
+	{
 		std::wofstream os;
 		os.open(tmp, std::ios_base::trunc);
 
@@ -147,6 +181,17 @@ void MainWindow::OnNew()
 			MessageBox(wnd, L"No se pudo crear el archivo", L"Error", 0);
 		}
 	}
+}
+
+void MainWindow::OnSaveAs()
+{
+	OnSave();
+}
+
+void MainWindow::OnConfig()
+{
+	DialogBoxParam(instance, MAKEINTRESOURCE(IDD_CONFIG), wnd, (DLGPROC)StaticConfigDlgProc, (LPARAM)this);
+
 }
 
 LRESULT MainWindow::DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -254,11 +299,9 @@ void MainWindow::CreateControls()
 	children.push_back(edRet->Window());
 	btAdd = std::make_unique<Button>();
 	btAdd->Create(wnd, BTADD, L"Agregar", 638, 139);
-	children.push_back(btAdd->Window());
 
 	list = std::make_unique<ListBox>();
 	list->Create(wnd, LSLIST, 11, 175, 450, 289);
-	children.push_back(list->Window());
 
 	lbTotalReq = std::make_unique<Label>();
 	lbTotalReq->Create(wnd, STATICLB, L"Total solicitado", 470, 180, 120, 15);
@@ -333,6 +376,45 @@ void MainWindow::CreateMainMenu()
 	AppendMenu(mainMenu, MF_POPUP | MF_STRING, (UINT_PTR)editMenu, L"Editar");
 
 	SetMenu(wnd, mainMenu);
+}
+
+BOOL CALLBACK MainWindow::StaticConfigDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam )
+{
+	MainWindow* pThis = nullptr; 
+
+	if (msg == WM_INITDIALOG)
+	{
+		pThis = (MainWindow*)lparam;
+		SetWindowLongPtr(wndDlg, DWLP_USER, (LONG_PTR)pThis);
+	}
+	else
+		pThis = (MainWindow*)GetWindowLongPtr(wndDlg, DWLP_USER);
+
+	if (pThis)
+		return pThis->ConfigDlgProc(wndDlg, msg, wparam, lparam);
+
+	return FALSE;
+}
+
+BOOL MainWindow::ConfigDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	switch (msg)
+	{
+	case WM_INITDIALOG:
+		break;
+
+	case WM_COMMAND:
+		switch (LOWORD(wparam))
+		{
+		case IDOK:
+		case IDCANCEL:
+			EndDialog(wndDlg, LOWORD(wparam));
+			return TRUE;
+		}
+		break;
+	}
+
+	return FALSE;
 }
 
 //BOOL CALLBACK MainWindow::StaticInputDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam )

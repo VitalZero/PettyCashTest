@@ -150,6 +150,7 @@
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="MsgHandler.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
@@ -161,6 +162,9 @@
     <ClCompile Include="Listbox.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PettCashTest.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
