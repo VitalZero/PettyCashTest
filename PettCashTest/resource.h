@@ -3,6 +3,10 @@
 // Usado por PettCashTest.rc
 //
 #define IDD_CONFIG                      101
+#define IDD_ADDDEPT                     102
+#define IDD_ADDACCOUNT                  104
+#define IDI_ICON2                       107
+#define IDI_MAIN                        107
 #define IDC_CUSTODY                     3001
 #define IDC_TOTAL                       3002
 
@@ -10,7 +14,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        102
+#define _APS_NEXT_RESOURCE_VALUE        108
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         3003
 #define _APS_NEXT_SYMED_VALUE           101

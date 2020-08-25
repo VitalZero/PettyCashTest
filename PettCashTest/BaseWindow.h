@@ -1,6 +1,7 @@
 #pragma once
 #include <cassert>
 #include "Includes.h"
+#include "resource.h"
 
 template <class DERIVED_T>
 class BaseWindow
@@ -104,7 +105,7 @@ ATOM BaseWindow<DERIVED_T>::Register()
 	wcx.lpfnWndProc = DERIVED_T::WndProc;
 	wcx.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcx.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	wcx.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+	wcx.hIcon = LoadIcon(instance, MAKEINTRESOURCE(IDI_MAIN));
 
 	return RegisterClassEx(&wcx);
 }

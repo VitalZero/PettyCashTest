@@ -10,11 +10,11 @@ void Settings::Load()
 	if (is)
 	{
 		std::wstring tmp;
-		while (std::getline(is >> std::ws, tmp) && is.good())
+		while (std::getline(is, tmp) && is.good())
 		{
 			if (tmp == L"[owner]")
 			{
-				std::getline(is >> std::ws, owner);
+				std::getline(is, owner);
 			}
 			else if (tmp == L"[amount]")
 			{
@@ -25,10 +25,9 @@ void Settings::Load()
 			}
 			else
 			{
-				throw std::runtime_error("Bad settings file");
+				throw std::exception("Bad settings file in open");
 			}
 		}
-		
 	}
 	else
 	{
@@ -48,6 +47,6 @@ void Settings::Save()
 	}
 	else
 	{
-		throw std::runtime_error("Could not save settings file");
+		throw std::exception("Bad settings file in save");
 	}
 }

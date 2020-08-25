@@ -63,6 +63,24 @@ BEGIN
     LTEXT           "Fondo asignado:",IDC_STATIC,6,33,54,8
 END
 
+IDD_ADDDEPT DIALOGEX 0, 0, 309, 177
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Agregar Departamento"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Aceptar",IDOK,198,156,50,14
+    PUSHBUTTON      "Cancelar",IDCANCEL,252,156,50,14
+END
+
+IDD_ADDACCOUNT DIALOGEX 0, 0, 309, 177
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Agregar Cuenta"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Aceptar",IDOK,198,156,50,14
+    PUSHBUTTON      "Cancelar",IDCANCEL,252,156,50,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -79,6 +97,22 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 80
     END
+
+    IDD_ADDDEPT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 302
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 170
+    END
+
+    IDD_ADDACCOUNT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 302
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 170
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -92,6 +126,26 @@ IDD_CONFIG AFX_DIALOG_LAYOUT
 BEGIN
     0
 END
+
+IDD_ADDDEPT AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_ADDACCOUNT AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MAIN                ICON                    "mainicon.ico"
 
 #endif    // Español (México) resources
 /////////////////////////////////////////////////////////////////////////////

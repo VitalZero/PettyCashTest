@@ -3,7 +3,7 @@
 #include <functional>
 #include "includes.h"
 
-using MsgFunction = std::function<LRESULT(UINT, WPARAM, LPARAM)>;
+using MsgFunction = std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)>;
 using MessageMap = std::unordered_map<UINT, MsgFunction>;
 using CmdFunction = std::function<void(void)>;
 using CommandMap = std::unordered_map<UINT, CmdFunction>;
@@ -17,7 +17,7 @@ public:
     if(map.find(msg) == map.end())
     {
       map[msg] = std::bind(func, type, std::placeholders::_1,
-        std::placeholders::_2, std::placeholders::_3);
+        std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
     }
   }
   template <class F, class T>
@@ -29,15 +29,16 @@ public:
       //cmdMap.insert(std::bind(func, type));
     }
   }
-  LRESULT Dispatch(UINT msg, WPARAM wparam, LPARAM lparam)
+  LRESULT Dispatch(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
   {
     auto itr = map.find(msg);
     if(itr != map.end())
     {
-      return itr->second(msg, wparam, lparam);
+      return itr->second(wnd, msg, wparam, lparam);
     }
    
-    return map.at(0)(msg, wparam, lparam);
+    //return map.at(0)(msg, wparam, lparam);
+    return DefWindowProc(wnd, msg, wparam, lparam);
   }
   void Dispatch(UINT idCtrl)
   {
@@ -45,9 +46,6 @@ public:
 
     if (itr != cmdMap.end())
     {
-      std::wstring info = L"cmdMap first: " + std::to_wstring(itr->first) + L"\n";
-      OutputDebugString(info.c_str());
-
       itr->second();
     }
   }

@@ -6,13 +6,15 @@
 #include "Settings.h"
 
 MainWindow::MainWindow()
+	:
+	fileName(L""), mainMenu(nullptr), font(nullptr)
 {
 	// msgs
 	msgHandler.Register(WM_CREATE, &MainWindow::OnCreate, this);
 	msgHandler.Register(WM_DESTROY, &MainWindow::OnDestroy, this);
 	msgHandler.Register(WM_CTLCOLORSTATIC, &MainWindow::OnCtlColorStatic, this);
 	msgHandler.Register(WM_PAINT, &MainWindow::OnPaint, this);
-	msgHandler.Register(0, &MainWindow::DefaultProc, this);
+	//msgHandler.Register(0, &MainWindow::DefaultProc, this);
 	msgHandler.Register(WM_COMMAND, &MainWindow::OnCommand, this);
 	// commands
 	msgHandler.Bind(EXITMENU, &MainWindow::OnExit, this);
@@ -21,16 +23,16 @@ MainWindow::MainWindow()
 	msgHandler.Bind(SAVEMENU, &MainWindow::OnSave, this);
 	msgHandler.Bind(SAVEASMENU, &MainWindow::OnSaveAs, this);
 	msgHandler.Bind(CFGMENU, &MainWindow::OnConfig, this);
+	msgHandler.Bind(BTADD, &MainWindow::OnAdd, this);
+	msgHandler.Bind(PRINTMENU, &MainWindow::OnPrint, this);
 }
 
 void MainWindow::Init()
 {
 	CreateControls();
 	CreateMainMenu();
-	Settings settings;
-	settings.Load();
-	SetWindowText(wnd, (std::wstring(L"Petty Cash - ") + settings.GetOwner()).c_str());
-	edTotalAssigned->SetText((std::to_wstring(settings.GetAmount()).c_str()));
+	ResetFields();
+	Load();
 
 	RECT rc = { 0 };
 	GetWindowRect(wnd, &rc);
@@ -44,7 +46,7 @@ void MainWindow::Init()
 
 LRESULT MainWindow::HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	return msgHandler.Dispatch(msg, wparam, lparam);
+	return msgHandler.Dispatch(wnd, msg, wparam, lparam);
 }
 
 BOOL CALLBACK MainWindow::SetChildWndFontProc(HWND wndChild, LPARAM font)
@@ -66,25 +68,25 @@ void MainWindow::ResetFields()
 	SendMessage(list->Window(), LB_RESETCONTENT, 0, 0);
 }
 
-LRESULT MainWindow::OnCreate(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT MainWindow::OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	return 1;
 }
 
-LRESULT MainWindow::OnDestroy(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT MainWindow::OnDestroy(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	DeleteObject(font);
 	PostQuitMessage(0);
 	return 0;
 }
 
-LRESULT MainWindow::OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT MainWindow::OnCtlColorStatic(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	SetBkMode((HDC)wparam, TRANSPARENT);
 	return (LRESULT)(HBRUSH)GetStockObject(NULL_BRUSH);
 }
 
-LRESULT MainWindow::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT MainWindow::OnPaint(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	PAINTSTRUCT ps;
 	HDC hdc = BeginPaint(wnd, &ps);
@@ -114,7 +116,7 @@ LRESULT MainWindow::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
 	return 0;
 }
 
-LRESULT MainWindow::OnCommand(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT MainWindow::OnCommand(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	msgHandler.Dispatch(LOWORD(wparam));
 	return 0;
@@ -128,6 +130,7 @@ void MainWindow::OnExit()
 void MainWindow::OnNew()
 {
 	ResetFields();
+	Load();
 }
 
 void MainWindow::OnOpen()
@@ -196,10 +199,9 @@ void MainWindow::OnSaveAs()
 void MainWindow::OnConfig()
 {
 	DialogBoxParam(instance, MAKEINTRESOURCE(IDD_CONFIG), wnd, (DLGPROC)StaticConfigDlgProc, (LPARAM)this);
-
 }
 
-LRESULT MainWindow::DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam)
+LRESULT MainWindow::DefaultProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	return DefWindowProc(wnd, msg, wparam, lparam);
 }
@@ -230,6 +232,7 @@ void MainWindow::SetGuiFont()
 }
 
 void MainWindow::CreateControls()
+
 {
 	lbDateStart = std::make_unique<Label>();
 	lbDateStart->Create(wnd, STATICLB, L"Fecha inicio", 11, 7, 80, 15);
@@ -332,8 +335,6 @@ void MainWindow::CreateControls()
 	lbTotalSum->Create(wnd, STATICLB, L"Suma", 470, 284, 120, 15);
 	edTotalSum = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edTotalSum->Create(wnd, EDTOTALSUM, 619, 279, 92);
-	edTotalSum->SetText(L"Disable");
-	edTotalSum->Disable();
 	children.push_back(edTotalSum->Window());
 
 	lbLoan = std::make_unique<Label>();
@@ -345,15 +346,11 @@ void MainWindow::CreateControls()
 	lbTotalAssigned->Create(wnd, STATICLB, L"Total fondo asignado", 470, 350, 120, 15);
 	edTotalAssigned = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edTotalAssigned->Create(wnd, EDTOTALASSIGNED, 619, 346, 92);
-	edTotalAssigned->Disable();
-	edTotalAssigned->SetText(L"Disabled!");
 	children.push_back(edTotalAssigned->Window());
 	lbDiff = std::make_unique<Label>();
 	lbDiff->Create(wnd, STATICLB, L"Diferencia", 470, 376, 120, 15);
 	edDiff = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edDiff->Create(wnd, EDDIFF, 619, 372, 92);
-	edDiff->Disable();
-	edDiff->SetText(L"Disabled!");
 	children.push_back(edDiff->Window());
 
 	SetFocus(edDateStart->Window());
@@ -385,6 +382,23 @@ void MainWindow::CreateMainMenu()
 	SetMenu(wnd, mainMenu);
 }
 
+void MainWindow::OnAdd()
+{
+}
+
+void MainWindow::OnPrint()
+{
+	MessageBox(wnd, L"Próximamente", L"Info", MB_ICONINFORMATION);
+}
+
+void MainWindow::Load()
+{
+	Settings settings;
+	settings.Load();
+	SetWindowText(wnd, (std::wstring(L"Petty Cash - ") + settings.GetOwner()).c_str());
+	edTotalAssigned->SetText((std::to_wstring(settings.GetAmount()).c_str()));
+}
+
 BOOL CALLBACK MainWindow::StaticConfigDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam )
 {
 	MainWindow* pThis = nullptr; 
@@ -410,7 +424,7 @@ BOOL MainWindow::ConfigDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lpar
 	case WM_INITDIALOG:
 	{
 		Settings settings;
-		settings.Load();
+		//settings.Load();
 		SetDlgItemInt(wndDlg, IDC_TOTAL, settings.GetAmount(), FALSE);
 		SetDlgItemText(wndDlg, IDC_CUSTODY, settings.GetOwner().c_str());
 	}
@@ -442,71 +456,3 @@ BOOL MainWindow::ConfigDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lpar
 
 	return FALSE;
 }
-
-//BOOL CALLBACK MainWindow::StaticInputDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam )
-//{
-//	//MainWindow* pThis = nullptr; 
-//
-//	//if (msg == WM_INITDIALOG)
-//	//{
-//	//	pThis = (MainWindow*)lparam;
-//	//	SetWindowLongPtr(wndDlg, DWLP_USER, (LONG_PTR)pThis);
-//	//}
-//	//else
-//	//	pThis = (MainWindow*)GetWindowLongPtr(wndDlg, DWLP_USER);
-//
-//	//if (pThis)
-//	//	return pThis->InputDlgProc(wndDlg, msg, wparam, lparam);
-//
-//	//return FALSE;
-//}
-//
-//BOOL CALLBACK MainWindow::StaticAboutDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam)
-//{
-//	//switch (msg)
-//	//{
-//	//case WM_COMMAND:
-//	//	if (LOWORD(wparam) == IDCANCEL)
-//	//	{
-//	//		EndDialog(wndDlg, LOWORD(wparam));
-//	//		return TRUE;
-//	//	}
-//	//}
-//	//
-//	//return FALSE;
-//}
-//
-//BOOL MainWindow::InputDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam)
-//{
-//	//switch (msg)
-//	//{
-//	//case WM_INITDIALOG:
-//	//	if( btnAsignar.WasPressed() )
-//	//	{
-//	//		SetDlgItemText(wndDlg, IDD_STATIC, "Asignar a:");
-//	//	}
-//	//	else if (btnBuscar.WasPressed())
-//	//	{
-//	//		SetDlgItemText(wndDlg, IDD_STATIC, "Buscar a:");
-//	//	}
-//	//break;
-//
-//	//case WM_COMMAND:
-//	//	switch (LOWORD(wparam))
-//	//	{
-//	//	case IDD_OK:
-//	//	{
-//	//		std::fill(szDialogInput, szDialogInput + sizeof(szDialogInput), 0);
-//
-//	//		unsigned int rtrn = GetDlgItemText(wndDlg, IDD_TEXTBOX, szDialogInput, MAX_PATH);
-//	//		
-//	//	}
-//	//	case IDD_CANCEL:
-//	//		EndDialog(wndDlg, LOWORD(wparam));
-//	//		return TRUE;
-//	//	}
-//	//	break;
-//	//}
-//
-//	//return FALSE;
-//}

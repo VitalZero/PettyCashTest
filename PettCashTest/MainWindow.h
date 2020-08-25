@@ -27,12 +27,12 @@ private:
 	static BOOL CALLBACK SetChildWndFontProc(HWND wndChild, LPARAM font);
 	static BOOL CALLBACK StaticConfigDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam);
 	BOOL ConfigDlgProc(HWND hWndDlg, UINT msg, WPARAM wparam, LPARAM lparam);
-	LRESULT OnCreate(UINT msg, WPARAM wparam, LPARAM lparam);
-	LRESULT OnDestroy(UINT msg, WPARAM wparam, LPARAM lparam);
-	LRESULT OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam);
-	LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
-	LRESULT OnCommand(UINT msg, WPARAM wparam, LPARAM lparam);
-	LRESULT DefaultProc(UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnDestroy(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnCtlColorStatic(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnPaint(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT OnCommand(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	LRESULT DefaultProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	void ResetFields();
 	void Init() override;
 	void OnExit();
@@ -44,13 +44,19 @@ private:
 	void SetGuiFont();
 	void CreateControls();
 	void CreateMainMenu();
+	void OnAdd();
+	void OnPrint();
+	void OnAddDept() {}
+	void OnAddAccount() {}
+	void Load();
 
 private:
 	std::vector<HWND> children;
 
 private:
-	HFONT font = nullptr;
-	HMENU mainMenu = nullptr;
+	HFONT font;
+	HMENU mainMenu;
+	std::wstring fileName;
 	// Data capture
 	std::unique_ptr<Editbox> edDateStart;
 	std::unique_ptr<Editbox> edDateEnd;

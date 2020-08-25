@@ -3,6 +3,7 @@
 #include "App.h"
 #include <cstring>
 #include <array>
+#include <stdexcept>
 
 int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 {
@@ -18,7 +19,8 @@ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 	{
 		std::array<wchar_t, MAX_PATH> errorMsg;
 
-		const char* msg = e.what();
+		const char* msg = { 0 };
+		msg = e.what();
 
 		for ( int i = 0; msg[i] != '\0'; ++i )
 		{
@@ -26,6 +28,10 @@ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 		}
 
 		MessageBox(nullptr, errorMsg.data(), L"Error!", MB_ICONERROR);
+	}
+	catch (...)
+	{
+		MessageBoxA(0, "Excepción no capturada", "Error!!", MB_ICONERROR);
 	}
 
 	return 0;
