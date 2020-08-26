@@ -44,8 +44,8 @@ private:
 	void CreateMainMenu();
 	void OnAdd();
 	void OnPrint();
-	void OnAddDept();
-	void OnAddAccount() {}
+	void OnAddDept() {}
+	void OnAddAccount();
 	void Load();
 
 private:

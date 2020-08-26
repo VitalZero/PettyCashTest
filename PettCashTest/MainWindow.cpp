@@ -392,7 +392,7 @@ void MainWindow::OnPrint()
 	MessageBox(wnd, L"Próximamente", L"Info", MB_ICONINFORMATION);
 }
 
-void MainWindow::OnAddDept()
+void MainWindow::OnAddAccount()
 {
 }
 
