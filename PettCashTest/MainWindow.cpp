@@ -198,7 +198,8 @@ void MainWindow::OnSaveAs()
 
 void MainWindow::OnConfig()
 {
-	DialogBoxParam(instance, MAKEINTRESOURCE(IDD_CONFIG), wnd, (DLGPROC)StaticConfigDlgProc, (LPARAM)this);
+	std::unique_ptr<Settings> settings = std::make_unique<Settings>();
+	DialogBoxParam(instance, MAKEINTRESOURCE(IDD_CONFIG), wnd, (DLGPROC)Settings::StaticConfigDlgProc, (LPARAM)settings.get());
 }
 
 LRESULT MainWindow::DefaultProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -391,68 +392,14 @@ void MainWindow::OnPrint()
 	MessageBox(wnd, L"Próximamente", L"Info", MB_ICONINFORMATION);
 }
 
+void MainWindow::OnAddDept()
+{
+}
+
 void MainWindow::Load()
 {
 	Settings settings;
 	settings.Load();
 	SetWindowText(wnd, (std::wstring(L"Petty Cash - ") + settings.GetOwner()).c_str());
 	edTotalAssigned->SetText((std::to_wstring(settings.GetAmount()).c_str()));
-}
-
-BOOL CALLBACK MainWindow::StaticConfigDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam )
-{
-	MainWindow* pThis = nullptr; 
-
-	if (msg == WM_INITDIALOG)
-	{
-		pThis = (MainWindow*)lparam;
-		SetWindowLongPtr(wndDlg, DWLP_USER, (LONG_PTR)pThis);
-	}
-	else
-		pThis = (MainWindow*)GetWindowLongPtr(wndDlg, DWLP_USER);
-
-	if (pThis)
-		return pThis->ConfigDlgProc(wndDlg, msg, wparam, lparam);
-
-	return FALSE;
-}
-
-BOOL MainWindow::ConfigDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam)
-{
-	switch (msg)
-	{
-	case WM_INITDIALOG:
-	{
-		Settings settings;
-		//settings.Load();
-		SetDlgItemInt(wndDlg, IDC_TOTAL, settings.GetAmount(), FALSE);
-		SetDlgItemText(wndDlg, IDC_CUSTODY, settings.GetOwner().c_str());
-	}
-		break;
-
-	case WM_COMMAND:
-		switch (LOWORD(wparam))
-		{
-		case IDOK:
-		{
-			Settings settings;
-			wchar_t buffer[MAX_PATH] = { 0 };
-			GetDlgItemText(wndDlg, IDC_CUSTODY, buffer, MAX_PATH);
-			std::wstring tmp(buffer);
-			settings.SetOwner(tmp);
-
-			GetDlgItemText(wndDlg, IDC_TOTAL, buffer, MAX_PATH);
-			tmp = buffer;
-			int amt = std::stoi(buffer);
-			settings.SetAmount(amt);
-			settings.Save();
-		}
-		case IDCANCEL:
-			EndDialog(wndDlg, LOWORD(wparam));
-			return TRUE;
-		}
-		break;
-	}
-
-	return FALSE;
 }

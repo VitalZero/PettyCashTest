@@ -25,8 +25,6 @@ public:
 
 private:
 	static BOOL CALLBACK SetChildWndFontProc(HWND wndChild, LPARAM font);
-	static BOOL CALLBACK StaticConfigDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam);
-	BOOL ConfigDlgProc(HWND hWndDlg, UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnDestroy(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnCtlColorStatic(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
@@ -46,7 +44,7 @@ private:
 	void CreateMainMenu();
 	void OnAdd();
 	void OnPrint();
-	void OnAddDept() {}
+	void OnAddDept();
 	void OnAddAccount() {}
 	void Load();
 
