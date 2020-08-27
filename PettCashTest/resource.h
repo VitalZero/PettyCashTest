@@ -9,7 +9,6 @@
 #define IDI_MAIN                        107
 #define IDC_CUSTODY                     3001
 #define IDC_TOTAL                       3002
-#define IDC_ACTNUM                      3003
 #define IDC_ACTNO                       3003
 #define IDC_ACTDESC                     3004
 #define IDC_DEPTNO                      3005

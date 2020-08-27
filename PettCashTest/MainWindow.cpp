@@ -4,6 +4,7 @@
 #include <fstream>
 #include "resource.h"
 #include "Settings.h"
+#include "Account.h"
 
 MainWindow::MainWindow()
 	:
@@ -23,8 +24,9 @@ MainWindow::MainWindow()
 	msgHandler.Bind(SAVEMENU, &MainWindow::OnSave, this);
 	msgHandler.Bind(SAVEASMENU, &MainWindow::OnSaveAs, this);
 	msgHandler.Bind(CFGMENU, &MainWindow::OnConfig, this);
-	msgHandler.Bind(BTADD, &MainWindow::OnAdd, this);
+	msgHandler.Bind(BTADD, &MainWindow::OnBtnAdd, this);
 	msgHandler.Bind(PRINTMENU, &MainWindow::OnPrint, this);
+	msgHandler.Bind(ADDACTMENU, &MainWindow::OnAddAccount, this);
 }
 
 void MainWindow::Init()
@@ -383,7 +385,7 @@ void MainWindow::CreateMainMenu()
 	SetMenu(wnd, mainMenu);
 }
 
-void MainWindow::OnAdd()
+void MainWindow::OnBtnAdd()
 {
 }
 
@@ -394,6 +396,8 @@ void MainWindow::OnPrint()
 
 void MainWindow::OnAddAccount()
 {
+	std::unique_ptr<Account> accounts = std::make_unique<Account>();
+	DialogBoxParam(instance, MAKEINTRESOURCE(IDD_ADDACCOUNT), wnd, (DLGPROC)Account::StaticAccountDlgProc, (LPARAM)accounts.get());
 }
 
 void MainWindow::Load()

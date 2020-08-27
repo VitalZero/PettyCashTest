@@ -42,7 +42,7 @@ private:
 	void SetGuiFont();
 	void CreateControls();
 	void CreateMainMenu();
-	void OnAdd();
+	void OnBtnAdd();
 	void OnPrint();
 	void OnAddDept() {}
 	void OnAddAccount();

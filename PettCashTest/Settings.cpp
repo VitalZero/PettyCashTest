@@ -32,7 +32,12 @@ void Settings::Load()
 	}
 	else
 	{
-		Save();
+		std::wofstream os(fileName, std::ios_base::trunc);
+
+		if (!os)
+		{
+			throw std::exception("Can't create config file");
+		}
 	}
 }
 
@@ -62,10 +67,14 @@ BOOL CALLBACK Settings::StaticConfigDlgProc(HWND wndDlg, UINT msg, WPARAM wparam
 		SetWindowLongPtr(wndDlg, DWLP_USER, (LONG_PTR)pThis);
 	}
 	else
+	{
 		pThis = (Settings*)GetWindowLongPtr(wndDlg, DWLP_USER);
+	}
 
 	if (pThis)
+	{
 		return pThis->ConfigDlgProcedure(wndDlg, msg, wparam, lparam);
+	}
 
 	return FALSE;
 }
