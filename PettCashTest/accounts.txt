@@ -1,5 +1,9 @@
 50112 Materiales
+50114 Gasolina y lubricantes
 50117 Refacciones
-601114 Seguridad
+60114 Seguridad e higiene
+60811 Papelería
+601114 Fletes
 601117 Miscelaneos
-601119 Material
+601211 No deducibles
+601518 Equipo de transporte utilitario

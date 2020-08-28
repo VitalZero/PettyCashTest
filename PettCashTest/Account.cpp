@@ -16,7 +16,9 @@ void Account::Load()
     {
       std::wstringstream ss(tmp);
       int tmpAct;
-      ss >> tmpAct >> tmp;
+      ss >> tmpAct;
+      ss.ignore();
+      std::getline(ss, tmp);
 
       Add(tmpAct, tmp);
     }
