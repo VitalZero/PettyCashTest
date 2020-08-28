@@ -89,18 +89,38 @@ BOOL Account::AccountDlgProcedure(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM l
 {
   switch (msg)
   {
+  case WM_INITDIALOG:
+    SetFocus(GetDlgItem(wndDlg, IDC_ACTNO));
+  break;
+
   case WM_COMMAND:
     switch (LOWORD(wparam))
     {
     case IDOK:
     {
-      int i = 0;
+      wchar_t buffer[MAX_PATH] = { 0 };
+      int len = GetWindowTextLength(GetDlgItem(wndDlg, IDC_ACTNO));
+      GetDlgItemText(wndDlg, IDC_ACTNO, buffer, len + 1);
+      int tmpActNo = std::stoi(buffer);
+
+      len = GetWindowTextLength(GetDlgItem(wndDlg, IDC_ACTDESC));
+      GetDlgItemText(wndDlg, IDC_ACTDESC, buffer, len + 1);
+      std::wstring tmpActDesc = buffer;
+
+      Load();
+      Add(tmpActNo, tmpActDesc);
+      Save();
+
+      SetDlgItemText(wndDlg, IDC_ACTNO, L"");
+      SetDlgItemTextW(wndDlg, IDC_ACTDESC, L"");
+      SetFocus(GetDlgItem(wndDlg, IDC_ACTNO));
     }
+    break;
+
     case IDCANCEL:
       EndDialog(wndDlg, LOWORD(wparam));
       return TRUE;
     }
-    break;
   }
   return FALSE;
 }
