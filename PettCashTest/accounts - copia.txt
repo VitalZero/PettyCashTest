@@ -1,5 +1,0 @@
-50112 Materiales
-50117 Refacciones
-60811 Papelería
-601114 Fletes
-601117 Miscelaneos
