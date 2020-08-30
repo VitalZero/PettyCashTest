@@ -201,7 +201,11 @@ void MainWindow::OnSaveAs()
 void MainWindow::OnConfig()
 {
 	std::unique_ptr<Settings> settings = std::make_unique<Settings>();
-	DialogBoxParam(instance, MAKEINTRESOURCE(IDD_CONFIG), wnd, (DLGPROC)Settings::StaticConfigDlgProc, (LPARAM)settings.get());
+	if (DialogBoxParam(instance, MAKEINTRESOURCE(IDD_CONFIG), wnd, (DLGPROC)Settings::StaticConfigDlgProc, (LPARAM)settings.get()) == IDOK)
+	{
+		SetWindowText(wnd, (std::wstring(L"Petty Cash - ") + settings->GetOwner()).c_str());
+		edTotalAssigned->SetText(std::to_wstring(settings->GetAmount()));
+	}
 }
 
 LRESULT MainWindow::DefaultProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
