@@ -19,10 +19,12 @@ public:
     int y,
     int width,
     int height = apparentMinHeight);
-  void AddItem(const std::wstring text);
+  int AddItem(const std::wstring text) const;
   std::wstring GetItem(int index);
   size_t GetItemLength(int index) const;
   HWND Window() const { return wnd; }
+  void SetItemData(int index, int data) const;
+  int GetItemData(int index) const;
 
 private:
 	HWND wnd;

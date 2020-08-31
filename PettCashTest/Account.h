@@ -15,6 +15,7 @@ public:
 	bool Add(int accountNumber, std::wstring& accountName);
 	static BOOL CALLBACK StaticAccountDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam);
 	BOOL AccountDlgProcedure(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam);
+	std::map<int, std::wstring> Get() const { return accounts; }
 
 private:
 	std::wstring fileName;

@@ -117,7 +117,6 @@ BOOL Account::AccountDlgProcedure(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM l
       SetDlgItemTextW(wndDlg, IDC_ACTDESC, L"");
       SetFocus(GetDlgItem(wndDlg, IDC_ACTNO));
     }
-    break;
 
     case IDCANCEL:
       EndDialog(wndDlg, LOWORD(wparam));

@@ -32,9 +32,9 @@ void Combobox::Create(HWND parent, int id, int x, int y, int width, int height)
   }
 }
 
-void Combobox::AddItem(const std::wstring text)
+int Combobox::AddItem(const std::wstring text) const
 {
-  lastAdded = (int)SendMessage(wnd, CB_ADDSTRING, 0, (LPARAM)text.c_str());
+  return SendMessage(wnd, CB_ADDSTRING, 0, (LPARAM)text.c_str());
 }
 
 std::wstring Combobox::GetItem(int index)
@@ -53,4 +53,14 @@ std::wstring Combobox::GetItem(int index)
 size_t Combobox::GetItemLength(int index) const
 {
   return SendMessage(wnd, CB_GETLBTEXTLEN, (WPARAM)index, 0);
+}
+
+void Combobox::SetItemData(int index, int data) const
+{
+  SendMessage(wnd, CB_SETITEMDATA, (WPARAM)index, (LPARAM)data);
+}
+
+int Combobox::GetItemData(int index) const
+{
+  return SendMessage(wnd, CB_GETITEMDATA, (WPARAM)index, 0);
 }

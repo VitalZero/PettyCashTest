@@ -5,6 +5,7 @@
 #include "resource.h"
 #include "Settings.h"
 #include "Account.h"
+#include "Department.h"
 
 MainWindow::MainWindow()
 	:
@@ -27,6 +28,7 @@ MainWindow::MainWindow()
 	msgHandler.Bind(BTADD, &MainWindow::OnBtnAdd, this);
 	msgHandler.Bind(PRINTMENU, &MainWindow::OnPrint, this);
 	msgHandler.Bind(ADDACTMENU, &MainWindow::OnAddAccount, this);
+	msgHandler.Bind(ADDDEPTMENU, &MainWindow::OnAddDept, this);
 }
 
 void MainWindow::Init()
@@ -203,7 +205,13 @@ void MainWindow::OnConfig()
 	std::unique_ptr<Settings> settings = std::make_unique<Settings>();
 	if (DialogBoxParam(instance, MAKEINTRESOURCE(IDD_CONFIG), wnd, (DLGPROC)Settings::StaticConfigDlgProc, (LPARAM)settings.get()) == IDOK)
 	{
-		SetWindowText(wnd, (std::wstring(L"Petty Cash - ") + settings->GetOwner()).c_str());
+		std::wstring tmpTitle;
+		if (settings->GetOwner() != L"")
+		{
+			tmpTitle = L" - " + settings->GetOwner();
+		}
+
+		SetWindowText(wnd, (std::wstring(L"Petty Cash") + tmpTitle).c_str());
 		edTotalAssigned->SetText(std::to_wstring(settings->GetAmount()));
 	}
 }
@@ -386,6 +394,10 @@ void MainWindow::CreateMainMenu()
 	AppendMenu(editMenu, MF_STRING, CFGMENU, L"Configuración");
 	AppendMenu(mainMenu, MF_POPUP | MF_STRING, (UINT_PTR)editMenu, L"Editar");
 
+	HMENU helpMenu = CreatePopupMenu();
+	AppendMenu(helpMenu, MF_STRING, -1, L"Acerca de...");
+	AppendMenu(mainMenu, MF_POPUP | MF_STRING, (UINT_PTR)helpMenu, L"Ayuda");
+
 	SetMenu(wnd, mainMenu);
 }
 
@@ -398,6 +410,12 @@ void MainWindow::OnPrint()
 	MessageBox(wnd, L"Próximamente", L"Info", MB_ICONINFORMATION);
 }
 
+void MainWindow::OnAddDept()
+{
+	std::unique_ptr<Department> departments = std::make_unique<Department>();
+	DialogBoxParam(instance, MAKEINTRESOURCE(IDD_ADDDEPT), wnd, (DLGPROC)Department::StaticDepartmentDlgProc, (LPARAM)departments.get());
+}
+
 void MainWindow::OnAddAccount()
 {
 	std::unique_ptr<Account> accounts = std::make_unique<Account>();
@@ -408,6 +426,30 @@ void MainWindow::Load()
 {
 	Settings settings;
 	settings.Load();
-	SetWindowText(wnd, (std::wstring(L"Petty Cash - ") + settings.GetOwner()).c_str());
+	std::wstring tmpTitle;
+	if (settings.GetOwner() != L"")
+	{
+		tmpTitle = L" - " + settings.GetOwner();
+	}
+
+	SetWindowText(wnd, (std::wstring(L"Petty Cash") + tmpTitle).c_str());
 	edTotalAssigned->SetText((std::to_wstring(settings.GetAmount()).c_str()));
+
+	Department departments;
+	departments.Load();
+	std::map<int, std::wstring> tmpDeptMap = std::move(departments.Get());
+	for (auto& d : tmpDeptMap)
+	{
+		int index = cbDept->AddItem(d.second + L" " + std::to_wstring(d.first));
+		cbDept->SetItemData(index, d.first);
+	}
+
+	Account accounts;
+	accounts.Load();
+	std::map<int, std::wstring> tmpActMap = std::move(accounts.Get());
+	for (auto& a : tmpActMap)
+	{
+		int index = cbAccount->AddItem(std::to_wstring(a.first) + L" " + a.second);
+		cbAccount->SetItemData(index, a.first);
+	}
 }
