@@ -1,6 +1,7 @@
 #include "Settings.h"
 #include <stdexcept>
 #include <sstream>
+#include <iomanip>
 #include "resource.h"
 
 void Settings::Load()
@@ -57,6 +58,14 @@ void Settings::Save()
 	}
 }
 
+std::wstring Settings::GetStringAmount()
+{
+	std::wstringstream ss;
+	ss << std::fixed << std::setprecision(4) << amount;
+
+	return ss.str();
+}
+
 BOOL CALLBACK Settings::StaticConfigDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	Settings* pThis = nullptr;
@@ -86,7 +95,8 @@ BOOL Settings::ConfigDlgProcedure(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM l
 	case WM_INITDIALOG:
 	{
 		Load();
-		SetDlgItemInt(wndDlg, IDC_TOTAL, amount, FALSE);
+		std::wstring tmp = GetStringAmount();
+		SetDlgItemText(wndDlg, IDC_TOTAL, tmp.c_str());
 		SetDlgItemText(wndDlg, IDC_CUSTODY, owner.c_str());
 	}
 	break;
@@ -102,7 +112,7 @@ BOOL Settings::ConfigDlgProcedure(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM l
 
 			int len = GetWindowTextLength(GetDlgItem(wndDlg, IDC_TOTAL));
 			GetDlgItemText(wndDlg, IDC_TOTAL, buffer, len + 1);
-			amount = std::stoi(buffer);
+			amount = std::stod(buffer);
 			Save();
 		}
 		case IDCANCEL:

@@ -211,7 +211,7 @@ void MainWindow::OnConfig()
 		}
 
 		SetWindowText(wnd, (std::wstring(L"Petty Cash") + tmpTitle).c_str());
-		edTotalAssigned->SetText(std::to_wstring(settings->GetAmount()));
+		edTotalAssigned->SetText(settings->GetStringAmount());
 	}
 }
 
@@ -450,7 +450,7 @@ void MainWindow::Load()
 	}
 
 	SetWindowText(wnd, (std::wstring(L"Petty Cash") + tmpTitle).c_str());
-	edTotalAssigned->SetText((std::to_wstring(settings.GetAmount()).c_str()));
+	edTotalAssigned->SetText(settings.GetStringAmount());
 
 	Department departments;
 	departments.Load();

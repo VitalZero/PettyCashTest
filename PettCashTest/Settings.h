@@ -11,15 +11,16 @@ public:
 	{}
 	void Load();
 	void Save();
-	int GetAmount() const { return amount; }
+	double GetAmount() const { return amount; }
+	std::wstring GetStringAmount();
 	std::wstring GetOwner() const { return owner; }
-	void SetAmount(int amount) { this->amount = amount; }
+	void SetAmount(double amount) { this->amount = amount; }
 	void SetOwner(std::wstring& owner) { this->owner = owner; }
 	static BOOL CALLBACK StaticConfigDlgProc(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam);
 	BOOL ConfigDlgProcedure(HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
 	std::wstring owner;
-	int amount;
+	double amount;
 	std::wstring fileName;
 };

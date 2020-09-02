@@ -1,4 +1,4 @@
 [owner]
 JONATHAN MICHEL
 [amount]
-8000
+8000.0000
