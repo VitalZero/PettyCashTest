@@ -1,4 +1,5 @@
 #include "EditBox.h"
+#include <vector>
 
 size_t Editbox::GetLength() const
 {
@@ -8,14 +9,13 @@ size_t Editbox::GetLength() const
 std::wstring Editbox::GetText()
 {
   std::wstring tmp;
-  tmp.reserve(GetLength() + 1);
-
+  tmp.resize(GetLength());
   if ( GetWindowText(wnd, &tmp[0], (int)(GetLength() + 1)) > 0 )
   {
     return tmp;
   }
 
-  return std::wstring();
+  return std::wstring(L"0");
 }
 
 void Editbox::SetText(const std::wstring& text)

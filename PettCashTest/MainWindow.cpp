@@ -6,6 +6,7 @@
 #include "Settings.h"
 #include "Account.h"
 #include "Department.h"
+#include <sstream>
 
 MainWindow::MainWindow()
 	:
@@ -68,8 +69,6 @@ void MainWindow::ResetFields()
 	{
 		SetWindowText(w, L"");
 	}
-
-	SendMessage(list->Window(), LB_RESETCONTENT, 0, 0);
 }
 
 LRESULT MainWindow::OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -403,6 +402,24 @@ void MainWindow::CreateMainMenu()
 
 void MainWindow::OnBtnAdd()
 {
+	std::wstring stringItem;
+	std::wstringstream wss;
+
+	wss << edVendor->GetText() << L" ";
+	wss << edRFC->GetText() << L" ";
+	wss << edConcept->GetText() << L" ";
+	wss << edInvDate->GetText() << L" ";
+	wss << edInvNum->GetText() << L" ";
+	wss << cbAccount->GetItemData(cbAccount->GetIndexFromText()) << L" ";
+	wss << edAmount->GetText() << L" ";
+	wss << edTax->GetText() << L" ";
+	wss << edRet->GetText() << std::endl;
+	stringItem = wss.str();
+
+	sum += std::stod(edAmount->GetText()) + std::stod(edTax->GetText());
+	ResetFields();
+	list->AddItem(stringItem);
+	edTotalReq->SetText(std::to_wstring(sum));
 }
 
 void MainWindow::OnPrint()

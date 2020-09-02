@@ -55,6 +55,7 @@ private:
 	HFONT font;
 	HMENU mainMenu;
 	std::wstring fileName;
+	double sum = 0;
 	// Data capture
 	std::unique_ptr<Editbox> edDateStart;
 	std::unique_ptr<Editbox> edDateEnd;

@@ -25,6 +25,10 @@ public:
   HWND Window() const { return wnd; }
   void SetItemData(int index, int data) const;
   int GetItemData(int index) const;
+  int GetSelectedIndex() const;
+  std::wstring GetText();
+  int GetLength() const;
+  int GetIndexFromText();
 
 private:
 	HWND wnd;
