@@ -10,6 +10,7 @@
 #include <memory>
 #include "MsgHandler.h"
 #include <vector>
+#include "PettyCash.h"
 
 class MainWindow : public BaseWindow<MainWindow>
 {
@@ -20,8 +21,6 @@ public:
 	LPCWSTR ClassName() const override { return L"PettyCash"; }
 	LRESULT HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam) override;
 	void AppendControl() {}
-	//BOOL InputDlgProc( HWND hWndDlg, UINT msg, WPARAM wparam, LPARAM lparam );
-	//static BOOL CALLBACK StaticAboutDlgProc( HWND wndDlg, UINT msg, WPARAM wparam, LPARAM lparam );
 
 private:
 	static BOOL CALLBACK SetChildWndFontProc(HWND wndChild, LPARAM font);
@@ -56,6 +55,7 @@ private:
 	HMENU mainMenu;
 	std::wstring fileName;
 	double sum = 0;
+	PettyCash pettyCash;
 	// Data capture
 	std::unique_ptr<Editbox> edDateStart;
 	std::unique_ptr<Editbox> edDateEnd;

@@ -17,7 +17,6 @@ MainWindow::MainWindow()
 	msgHandler.Register(WM_DESTROY, &MainWindow::OnDestroy, this);
 	msgHandler.Register(WM_CTLCOLORSTATIC, &MainWindow::OnCtlColorStatic, this);
 	msgHandler.Register(WM_PAINT, &MainWindow::OnPaint, this);
-	//msgHandler.Register(0, &MainWindow::DefaultProc, this);
 	msgHandler.Register(WM_COMMAND, &MainWindow::OnCommand, this);
 	// commands
 	msgHandler.Bind(EXITMENU, &MainWindow::OnExit, this);
@@ -168,6 +167,17 @@ void MainWindow::OnOpen()
 
 void MainWindow::OnSave()
 {
+	pettyCash.FillHeader(
+		edDateStart->GetText(),
+		edDateEnd->GetText(),
+		std::stoi(edWeek->GetText()),
+		std::stod(edPendRecv->GetText()),
+		std::stod(edCash->GetText()),
+		std::stod(edPendInv->GetText()),
+		std::stod(edLoan->GetText()),
+		std::stod(edTotalAssigned->GetText())
+	);
+
 	wchar_t tmp[MAX_PATH] = { 0 };
 	OPENFILENAME ofn = { 0 };
 	ofn.lStructSize = sizeof(ofn);
@@ -185,7 +195,7 @@ void MainWindow::OnSave()
 
 		if (os)
 		{
-			os << L"This is a new file!" << std::endl;
+			pettyCash.Save(os);
 		}
 		else
 		{
@@ -360,7 +370,7 @@ void MainWindow::CreateControls()
 	lbTotalAssigned->Create(wnd, STATICLB, L"Total fondo asignado", 470, 350, 120, 15);
 	edTotalAssigned = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edTotalAssigned->Create(wnd, EDTOTALASSIGNED, 619, 346, 92);
-	children.push_back(edTotalAssigned->Window());
+	//children.push_back(edTotalAssigned->Window());
 	lbDiff = std::make_unique<Label>();
 	lbDiff->Create(wnd, STATICLB, L"Diferencia", 470, 376, 120, 15);
 	edDiff = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
@@ -402,24 +412,39 @@ void MainWindow::CreateMainMenu()
 
 void MainWindow::OnBtnAdd()
 {
-	std::wstring stringItem;
-	std::wstringstream wss;
+	Invoice invoice;
+	invoice.vendor = edVendor->GetText();
+	invoice.rfc = edRFC->GetText();
+	invoice.concept = edConcept->GetText();
+	invoice.date = edInvDate->GetText();
+	invoice.invoiceNo = edInvNum->GetText();
+	invoice.account = cbAccount->GetText();
+	invoice.amount = std::stod(edAmount->GetText());
+	invoice.tax = std::stod(edTax->GetText());
+	invoice.retain = std::stod(edRet->GetText());
 
-	wss << edVendor->GetText() << L" ";
-	wss << edRFC->GetText() << L" ";
-	wss << edConcept->GetText() << L" ";
-	wss << edInvDate->GetText() << L" ";
-	wss << edInvNum->GetText() << L" ";
-	wss << cbAccount->GetItemData(cbAccount->GetIndexFromText()) << L" ";
-	wss << edAmount->GetText() << L" ";
-	wss << edTax->GetText() << L" ";
-	wss << edRet->GetText() << std::endl;
-	stringItem = wss.str();
-
-	sum += std::stod(edAmount->GetText()) + std::stod(edTax->GetText());
+	pettyCash.AddInvoice(cbDept->GetText(), invoice);
+	list->AddItem(pettyCash.GetLastItem());
 	ResetFields();
-	list->AddItem(stringItem);
-	edTotalReq->SetText(std::to_wstring(sum));
+	edTotalReq->SetText(std::to_wstring(pettyCash.GetTotal()));
+	//std::wstring stringItem;
+	//std::wstringstream wss;
+
+	//wss << edVendor->GetText() << L" ";
+	//wss << edRFC->GetText() << L" ";
+	//wss << edConcept->GetText() << L" ";
+	//wss << edInvDate->GetText() << L" ";
+	//wss << edInvNum->GetText() << L" ";
+	//wss << cbAccount->GetItemData(cbAccount->GetIndexFromText()) << L" ";
+	//wss << edAmount->GetText() << L" ";
+	//wss << edTax->GetText() << L" ";
+	//wss << edRet->GetText() << std::endl;
+	//stringItem = wss.str();
+
+	//sum += std::stod(edAmount->GetText()) + std::stod(edTax->GetText());
+	//ResetFields();
+	//list->AddItem(stringItem);
+	//edTotalReq->SetText(std::to_wstring(sum));
 }
 
 void MainWindow::OnPrint()
@@ -454,19 +479,19 @@ void MainWindow::Load()
 
 	Department departments;
 	departments.Load();
-	std::map<int, std::wstring> tmpDeptMap = std::move(departments.Get());
+	auto tmpDeptMap = std::move(departments.Get());
 	for (auto& d : tmpDeptMap)
 	{
-		int index = cbDept->AddItem(d.second + L" " + std::to_wstring(d.first));
+		int index = cbDept->AddItem(d.second);
 		cbDept->SetItemData(index, d.first);
 	}
 
 	Account accounts;
 	accounts.Load();
-	std::map<int, std::wstring> tmpActMap = std::move(accounts.Get());
+	auto tmpActMap = std::move(accounts.Get());
 	for (auto& a : tmpActMap)
 	{
-		int index = cbAccount->AddItem(std::to_wstring(a.first) + L" " + a.second);
+		int index = cbAccount->AddItem(std::to_wstring(a.first) + L"-" + a.second);
 		cbAccount->SetItemData(index, a.first);
 	}
 }
