@@ -156,6 +156,7 @@
     <ClInclude Include="PettyCash.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Settings.h" />
+    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Account.cpp" />

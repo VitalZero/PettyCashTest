@@ -30,24 +30,28 @@ private:
 	LRESULT OnPaint(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnCommand(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT DefaultProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	// Helper functions
 	void ResetInvoiceFields();
 	void ResetHeaderFields();
 	void ResetTotalFields();
 	void Init() override;
+	void SetGuiFont();
+	void CreateControls();
+	void CreateMainMenu();
+	void Load();
+	void UpdateTotals();
+	// Commands
 	void OnExit();
 	void OnNew();
 	void OnOpen();
 	void OnSave();
 	void OnSaveAs();
 	void OnConfig();
-	void SetGuiFont();
-	void CreateControls();
-	void CreateMainMenu();
 	void OnBtnAdd();
 	void OnPrint();
 	void OnAddDept();
 	void OnAddAccount();
-	void Load();
+	void OnEnUpdate(UINT idCtrl);
 
 private:
 	std::vector<HWND> children;

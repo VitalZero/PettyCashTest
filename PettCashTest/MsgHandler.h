@@ -5,7 +5,7 @@
 
 using MsgFunction = std::function<LRESULT(HWND, UINT, WPARAM, LPARAM)>;
 using MessageMap = std::unordered_map<UINT, MsgFunction>;
-using CmdFunction = std::function<void(void)>;
+using CmdFunction = std::function<void()>;
 using CommandMap = std::unordered_map<UINT, CmdFunction>;
 
 class MsgHandler
@@ -26,7 +26,6 @@ public:
     if (cmdMap.find(msg) == cmdMap.end())
     {
       cmdMap[msg] = std::bind(func, type);
-      //cmdMap.insert(std::bind(func, type));
     }
   }
   LRESULT Dispatch(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -37,7 +36,6 @@ public:
       return itr->second(wnd, msg, wparam, lparam);
     }
    
-    //return map.at(0)(msg, wparam, lparam);
     return DefWindowProc(wnd, msg, wparam, lparam);
   }
   void Dispatch(UINT idCtrl)

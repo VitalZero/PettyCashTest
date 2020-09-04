@@ -61,7 +61,7 @@ void Settings::Save()
 std::wstring Settings::GetStringAmount()
 {
 	std::wstringstream ss;
-	ss << std::fixed << std::setprecision(4) << amount;
+	ss << std::fixed << std::setprecision(2) << std::fixed << amount;
 
 	return ss.str();
 }

@@ -7,6 +7,7 @@
 #include "Account.h"
 #include "Department.h"
 #include <sstream>
+#include "Utilities.h"
 
 MainWindow::MainWindow()
 	:
@@ -142,7 +143,14 @@ LRESULT MainWindow::OnPaint(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 LRESULT MainWindow::OnCommand(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	msgHandler.Dispatch(LOWORD(wparam));
+	if (HIWORD(wparam) == EN_KILLFOCUS)
+	{
+		OnEnUpdate(LOWORD(wparam));
+	}
+	else
+	{
+		msgHandler.Dispatch(LOWORD(wparam));
+	}
 	return 0;
 }
 
@@ -437,20 +445,10 @@ void MainWindow::OnBtnAdd()
 
 	pettyCash.AddInvoice(cbDept->GetText(), invoice);
 	list->AddItem(pettyCash.GetLastItem());
-	ResetInvoiceFields();
+	edTotalReq->SetText(utilities::format_decimal(pettyCash.GetTotal()));
 
-	edTotalReq->SetText(std::to_wstring(pettyCash.GetTotal()));
-	// Sum 
-	double pendRecv = std::stod(edPendRecv->GetText());
-	double cash = std::stod(edCash->GetText());
-	double pendInv = std::stod(edPendInv->GetText());
-	double sum = pettyCash.GetTotal() + pendRecv + cash + pendInv;
-	edTotalSum->SetText(std::to_wstring(sum));
-	// Difference
-	double loan = std::stod(edLoan->GetText());
-	double totalAssigned = std::stod(edTotalAssigned->GetText());
-	double difference = totalAssigned - sum + loan;
-	edDiff->SetText(std::to_wstring(difference));
+	ResetInvoiceFields();
+	UpdateTotals();
 }
 
 void MainWindow::OnPrint()
@@ -468,6 +466,21 @@ void MainWindow::OnAddAccount()
 {
 	std::unique_ptr<Account> accounts = std::make_unique<Account>();
 	DialogBoxParam(instance, MAKEINTRESOURCE(IDD_ADDACCOUNT), wnd, (DLGPROC)Account::StaticAccountDlgProc, (LPARAM)accounts.get());
+}
+
+void MainWindow::OnEnUpdate(UINT idCtrl)
+{
+	switch (idCtrl)
+	{
+	case EDTOTALREQ:
+	case EDPENDINV:
+	case EDPENDRECV:
+	case EDCASH:
+	case EDLOAN:
+	case EDTOTALASSIGNED:
+		UpdateTotals();
+		break;
+	}
 }
 
 void MainWindow::Load()
@@ -500,4 +513,20 @@ void MainWindow::Load()
 		int index = cbAccount->AddItem(std::to_wstring(a.first) + L"-" + a.second);
 		cbAccount->SetItemData(index, a.first);
 	}
+}
+
+void MainWindow::UpdateTotals()
+{
+	// Sum 
+	double totalReq = pettyCash.GetTotal();
+	double pendRecv = std::stod(edPendRecv->GetText());
+	double cash = std::stod(edCash->GetText());
+	double pendInv = std::stod(edPendInv->GetText());
+	double sum = totalReq + pendRecv + cash + pendInv;
+	edTotalSum->SetText(utilities::format_decimal(sum));
+	// Difference
+	double loan = std::stod(edLoan->GetText());
+	double totalAssigned = std::stod(edTotalAssigned->GetText());
+	double difference = totalAssigned - sum + loan;
+	edDiff->SetText(utilities::format_decimal(difference));
 }
