@@ -24,6 +24,7 @@
     <ProjectGuid>{48ec8195-44db-4536-a7d1-92442385cfdd}</ProjectGuid>
     <RootNamespace>PettCashTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>PettyCashTest</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

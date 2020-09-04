@@ -29,6 +29,7 @@ public:
   std::wstring GetText();
   int GetLength() const;
   int GetIndexFromText();
+  void SetText(const std::wstring& text);
 
 private:
 	HWND wnd;

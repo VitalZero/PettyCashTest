@@ -103,3 +103,8 @@ int Combobox::GetIndexFromText()
 
   return -1;
 }
+
+void Combobox::SetText(const std::wstring& text)
+{
+  SetWindowText(wnd, text.c_str());
+}

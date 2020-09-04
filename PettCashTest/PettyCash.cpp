@@ -38,15 +38,6 @@ void PettyCash::AddInvoice(const std::wstring& department, const Invoice& invoic
 	total += invoice.amount + invoice.tax - invoice.retain;
 	records++;
 	SetLastItem(department, invoice);
-
-	//auto itr = data.find(department);
-	//if (itr != data.end())
-	//{
-	//	data[department].emplace_back(invoice);
-	//	total += invoice.amount + invoice.tax - invoice.retain;
-	//	records++;
-	//	SetLastItem(department, invoice);
-	//}
 }
 
 void PettyCash::Save(std::wostream& os)
@@ -54,7 +45,7 @@ void PettyCash::Save(std::wostream& os)
 	// header
 	os << L"1.1 " << records << "\n";
 	os << L"[fechas]\n";
-	os << startDate << L" " << endDate << week << L"\n";
+	os << startDate << L" " << endDate << L" " << week << L"\n";
 	os << L"[montos]\n";
 	os << total << L" " << pending << L" " << cash << L" " 
 		<< invoices << L" "	<< loan << L" " << assigned << "\n";
@@ -80,7 +71,7 @@ void PettyCash::Save(std::wostream& os)
 void PettyCash::SetLastItem(const std::wstring& dept, const Invoice& invoice)
 {
 	std::wstringstream ss;
-	ss << invoice.vendor << L":" << invoice.rfc << L" " << invoice.date << L":" << invoice.invoiceNo
+	ss << invoice.rfc << L" " << invoice.date << L":" << invoice.invoiceNo
 		<< L" " << invoice.account << L":> $ " << std::setprecision(4) << invoice.amount
 		<< L" I.V.A.:> $ " << std::setprecision(4) << invoice.tax << L" -$ " << std::setprecision(4) << invoice.retain
 		<< L"  TOTAL:> $ " << std::setprecision(4) << (invoice.amount + invoice.tax - invoice.retain);

@@ -35,7 +35,7 @@ void MainWindow::Init()
 {
 	CreateControls();
 	CreateMainMenu();
-	ResetFields();
+	ResetInvoiceFields();
 	Load();
 
 	RECT rc = { 0 };
@@ -59,15 +59,37 @@ BOOL CALLBACK MainWindow::SetChildWndFontProc(HWND wndChild, LPARAM font)
 	return TRUE;
 }
 
-void MainWindow::ResetFields()
+void MainWindow::ResetInvoiceFields()
 {
-	std::wstring tmp;
-	tmp.resize(MAX_PATH);
+	edVendor->SetText(L"");
+	edRFC->SetText(L"");
+	edConcept->SetText(L"");
+	edInvDate->SetText(L"");
+	edInvNum->SetText(L"");
+	cbAccount->SetText(L"");
+	edAmount->SetText(L"");
+	edTax->SetText(L"");
+	edRet->SetText(L"");
+}
 
-	for (auto& w : children)
-	{
-		SetWindowText(w, L"");
-	}
+void MainWindow::ResetHeaderFields()
+{
+	edStartDate->SetText(L"");
+	edEndDate->SetText(L"");
+	edWeek->SetText(L"");
+	cbDept->SetText(L"");
+}
+
+void MainWindow::ResetTotalFields()
+{
+	edTotalReq->SetText(L"0");
+	edPendInv->SetText(L"0");
+	edCash->SetText(L"0");
+	edPendInv->SetText(L"0");
+	edTotalSum->SetText(L"0");
+	edPendRecv->SetText(L"0");
+	edLoan->SetText(L"0");
+	edDiff->SetText(L"0");
 }
 
 LRESULT MainWindow::OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -131,7 +153,7 @@ void MainWindow::OnExit()
 
 void MainWindow::OnNew()
 {
-	ResetFields();
+	ResetInvoiceFields();
 	Load();
 }
 
@@ -148,7 +170,7 @@ void MainWindow::OnOpen()
 
 	if (GetOpenFileName(&ofn))
 	{
-		ResetFields();
+		ResetInvoiceFields();
 		std::wifstream is;
 		is.open(tmp);
 
@@ -168,8 +190,8 @@ void MainWindow::OnOpen()
 void MainWindow::OnSave()
 {
 	pettyCash.FillHeader(
-		edDateStart->GetText(),
-		edDateEnd->GetText(),
+		edStartDate->GetText(),
+		edEndDate->GetText(),
 		std::stoi(edWeek->GetText()),
 		std::stod(edPendRecv->GetText()),
 		std::stod(edCash->GetText()),
@@ -258,27 +280,23 @@ void MainWindow::SetGuiFont()
 void MainWindow::CreateControls()
 
 {
-	lbDateStart = std::make_unique<Label>();
-	lbDateStart->Create(wnd, STATICLB, L"Fecha inicio", 11, 7, 80, 15);
-	edDateStart = std::make_unique<Editbox>();
-	edDateStart->Create(wnd, EDDATESTART, 11, 25, 80); 
-	children.push_back(edDateStart->Window());
-	lbDateEnd = std::make_unique<Label>();
-	lbDateEnd->Create(wnd, STATICLB, L"Fecha fin", 96, 7, 80, 15);
-	edDateEnd = std::make_unique<Editbox>();
-	edDateEnd->Create(wnd, EDDATEEND, 96, 25, 80);
-	children.push_back(edDateEnd->Window());
+	lbStartDate = std::make_unique<Label>();
+	lbStartDate->Create(wnd, STATICLB, L"Fecha inicio", 11, 7, 80, 15);
+	edStartDate = std::make_unique<Editbox>();
+	edStartDate->Create(wnd, EDDATESTART, 11, 25, 80); 
+	lbEndDate = std::make_unique<Label>();
+	lbEndDate->Create(wnd, STATICLB, L"Fecha fin", 96, 7, 80, 15);
+	edEndDate = std::make_unique<Editbox>();
+	edEndDate->Create(wnd, EDDATEEND, 96, 25, 80);
 	lbWeek = std::make_unique<Label>();
 	lbWeek->Create(wnd, STATICLB, L"Semana num", 182, 7, 80, 15);
 	edWeek = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edWeek->Create(wnd, EDWEEK, 182, 25, 80);
-	children.push_back(edWeek->Window());
 
 	lbDept = std::make_unique<Label>();
 	lbDept->Create(wnd, STATICLB, L"Departamento", 412, 7, 80, 15);
 	cbDept = std::make_unique<Combobox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | WS_OVERLAPPED | CBS_DROPDOWN | CBS_HASSTRINGS | CBS_UPPERCASE);
 	cbDept->Create(wnd, CBDEPT, 412, 25, 300);
-	children.push_back(cbDept->Window());
 
 	lbSectionInv = std::make_unique<Label>();
 	lbSectionInv->Create(wnd, STATICLB, L"Comprobantes", 11, 54, 80, 15);
@@ -339,45 +357,39 @@ void MainWindow::CreateControls()
 	lbTotalReq->Create(wnd, STATICLB, L"Total solicitado", 470, 180, 120, 15);
 	edTotalReq = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edTotalReq->Create(wnd, EDTOTALREQ, 619, 175, 92);
-	children.push_back(edTotalReq->Window());
 	lbPendRecv = std::make_unique<Label>();
 	lbPendRecv->Create(wnd, STATICLB, L"Reembolso pendiente", 470, 206, 120, 15);
 	edPendRecv = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edPendRecv->Create(wnd, EDPENDRECV, 619, 201, 92);
-	children.push_back(edPendRecv->Window());
 	lbCash = std::make_unique<Label>();
 	lbCash->Create(wnd, STATICLB, L"Efectivo en caja", 470, 232, 120, 15);
 	edCash = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edCash->Create(wnd, EDCASH, 619, 227, 92);
-	children.push_back(edCash->Window());
 	lbPendInv = std::make_unique<Label>();
 	lbPendInv->Create(wnd, STATICLB, L"Comprobantes pendientes", 470, 258, 120, 15);
 	edPendInv = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edPendInv->Create(wnd, EDPENDINV, 619, 253, 92);
-	children.push_back(edPendInv->Window());
 	lbTotalSum = std::make_unique<Label>();
 	lbTotalSum->Create(wnd, STATICLB, L"Suma", 470, 284, 120, 15);
 	edTotalSum = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edTotalSum->Create(wnd, EDTOTALSUM, 619, 279, 92);
-	children.push_back(edTotalSum->Window());
 
 	lbLoan = std::make_unique<Label>();
 	lbLoan->Create(wnd, STATICLB, L"Préstamos", 470, 324, 120, 15);
 	edLoan = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edLoan->Create(wnd, EDLOAN, 619, 320, 92);
-	children.push_back(edLoan->Window());
 	lbTotalAssigned = std::make_unique<Label>();
 	lbTotalAssigned->Create(wnd, STATICLB, L"Total fondo asignado", 470, 350, 120, 15);
 	edTotalAssigned = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edTotalAssigned->Create(wnd, EDTOTALASSIGNED, 619, 346, 92);
-	//children.push_back(edTotalAssigned->Window());
 	lbDiff = std::make_unique<Label>();
 	lbDiff->Create(wnd, STATICLB, L"Diferencia", 470, 376, 120, 15);
 	edDiff = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edDiff->Create(wnd, EDDIFF, 619, 372, 92);
-	children.push_back(edDiff->Window());
+	
+	ResetTotalFields();
 
-	SetFocus(edDateStart->Window());
+	SetFocus(edStartDate->Window());
 
 	SetGuiFont();
 }
@@ -425,26 +437,20 @@ void MainWindow::OnBtnAdd()
 
 	pettyCash.AddInvoice(cbDept->GetText(), invoice);
 	list->AddItem(pettyCash.GetLastItem());
-	ResetFields();
+	ResetInvoiceFields();
+
 	edTotalReq->SetText(std::to_wstring(pettyCash.GetTotal()));
-	//std::wstring stringItem;
-	//std::wstringstream wss;
-
-	//wss << edVendor->GetText() << L" ";
-	//wss << edRFC->GetText() << L" ";
-	//wss << edConcept->GetText() << L" ";
-	//wss << edInvDate->GetText() << L" ";
-	//wss << edInvNum->GetText() << L" ";
-	//wss << cbAccount->GetItemData(cbAccount->GetIndexFromText()) << L" ";
-	//wss << edAmount->GetText() << L" ";
-	//wss << edTax->GetText() << L" ";
-	//wss << edRet->GetText() << std::endl;
-	//stringItem = wss.str();
-
-	//sum += std::stod(edAmount->GetText()) + std::stod(edTax->GetText());
-	//ResetFields();
-	//list->AddItem(stringItem);
-	//edTotalReq->SetText(std::to_wstring(sum));
+	// Sum 
+	double pendRecv = std::stod(edPendRecv->GetText());
+	double cash = std::stod(edCash->GetText());
+	double pendInv = std::stod(edPendInv->GetText());
+	double sum = pettyCash.GetTotal() + pendRecv + cash + pendInv;
+	edTotalSum->SetText(std::to_wstring(sum));
+	// Difference
+	double loan = std::stod(edLoan->GetText());
+	double totalAssigned = std::stod(edTotalAssigned->GetText());
+	double difference = totalAssigned - sum + loan;
+	edDiff->SetText(std::to_wstring(difference));
 }
 
 void MainWindow::OnPrint()

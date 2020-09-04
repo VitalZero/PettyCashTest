@@ -30,7 +30,9 @@ private:
 	LRESULT OnPaint(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT OnCommand(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
 	LRESULT DefaultProc(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam);
-	void ResetFields();
+	void ResetInvoiceFields();
+	void ResetHeaderFields();
+	void ResetTotalFields();
 	void Init() override;
 	void OnExit();
 	void OnNew();
@@ -54,11 +56,10 @@ private:
 	HFONT font;
 	HMENU mainMenu;
 	std::wstring fileName;
-	double sum = 0;
 	PettyCash pettyCash;
 	// Data capture
-	std::unique_ptr<Editbox> edDateStart;
-	std::unique_ptr<Editbox> edDateEnd;
+	std::unique_ptr<Editbox> edStartDate;
+	std::unique_ptr<Editbox> edEndDate;
 	std::unique_ptr<Editbox> edWeek;
 	std::unique_ptr<Combobox> cbDept;
 	std::unique_ptr<Editbox> edVendor;
@@ -83,8 +84,8 @@ private:
 	// Result
 	std::unique_ptr<ListBox> list;
 	// Labels for controls
-	std::unique_ptr<Label> lbDateStart;
-	std::unique_ptr<Label> lbDateEnd;
+	std::unique_ptr<Label> lbStartDate;
+	std::unique_ptr<Label> lbEndDate;
 	std::unique_ptr<Label> lbWeek;
 	std::unique_ptr<Label> lbDept;
 	std::unique_ptr<Label> lbVendor;
