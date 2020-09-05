@@ -8,6 +8,7 @@
 #include "Department.h"
 #include <sstream>
 #include "Utilities.h"
+#include <shellapi.h>
 
 MainWindow::MainWindow()
 	:
@@ -30,6 +31,7 @@ MainWindow::MainWindow()
 	msgHandler.Bind(PRINTMENU, &MainWindow::OnPrint, this);
 	msgHandler.Bind(ADDACTMENU, &MainWindow::OnAddAccount, this);
 	msgHandler.Bind(ADDDEPTMENU, &MainWindow::OnAddDept, this);
+	msgHandler.Bind(ABOUTMENU, &MainWindow::OnAbout, this);
 }
 
 void MainWindow::Init()
@@ -424,7 +426,7 @@ void MainWindow::CreateMainMenu()
 	AppendMenu(mainMenu, MF_POPUP | MF_STRING, (UINT_PTR)editMenu, L"Editar");
 
 	HMENU helpMenu = CreatePopupMenu();
-	AppendMenu(helpMenu, MF_STRING, -1, L"Acerca de...");
+	AppendMenu(helpMenu, MF_STRING, ABOUTMENU, L"Acerca de...");
 	AppendMenu(mainMenu, MF_POPUP | MF_STRING, (UINT_PTR)helpMenu, L"Ayuda");
 
 	SetMenu(wnd, mainMenu);
@@ -466,6 +468,11 @@ void MainWindow::OnAddAccount()
 {
 	std::unique_ptr<Account> accounts = std::make_unique<Account>();
 	DialogBoxParam(instance, MAKEINTRESOURCE(IDD_ADDACCOUNT), wnd, (DLGPROC)Account::StaticAccountDlgProc, (LPARAM)accounts.get());
+}
+
+void MainWindow::OnAbout()
+{
+	ShellAbout(wnd, L"Petty cash#blah", L"blah blah blah blah#bleh bleh bleh bleh!", LoadIcon(instance, MAKEINTRESOURCE(IDI_MAIN)));
 }
 
 void MainWindow::OnEnUpdate(UINT idCtrl)
