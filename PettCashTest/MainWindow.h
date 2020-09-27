@@ -52,6 +52,7 @@ private:
 	void OnPrint();
 	void OnAddDept();
 	void OnAddAccount();
+	void OnAbout();
 	void OnEnUpdate(UINT idCtrl);
 
 private:
