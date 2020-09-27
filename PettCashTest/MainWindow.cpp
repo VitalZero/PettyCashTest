@@ -87,10 +87,17 @@ void MainWindow::ResetTotalFields()
 	edPendInv->SetText(L"0");
 	edCash->SetText(L"0");
 	edPendInv->SetText(L"0");
+
+	edTotalSum->Enable();
 	edTotalSum->SetText(L"0");
+	edTotalSum->Disable();
+
 	edPendRecv->SetText(L"0");
 	edLoan->SetText(L"0");
+
+	edDiff->Enable();
 	edDiff->SetText(L"0");
+	edDiff->Disable();
 }
 
 LRESULT MainWindow::OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -448,7 +455,8 @@ void MainWindow::OnBtnAdd()
 	edTotalReq->SetText(utilities::format_decimal(pettyCash.GetTotal()));
 
 	ResetInvoiceFields();
-	UpdateTotals();
+	UpdateSum();
+	UpdateDiff();
 }
 
 void MainWindow::OnPrint()
@@ -470,16 +478,18 @@ void MainWindow::OnAddAccount()
 
 void MainWindow::OnEnUpdate(UINT idCtrl)
 {
-	switch (idCtrl)
+	if (idCtrl == EDTOTALREQ ||
+		idCtrl == EDPENDINV ||
+		idCtrl == EDPENDRECV ||
+		idCtrl == EDCASH)
 	{
-	case EDTOTALREQ:
-	case EDPENDINV:
-	case EDPENDRECV:
-	case EDCASH:
-	case EDLOAN:
-	case EDTOTALASSIGNED:
-		UpdateTotals();
-		break;
+		UpdateSum();
+		UpdateDiff();
+	}
+	else if (idCtrl == EDLOAN ||
+		idCtrl == EDTOTALASSIGNED)
+	{
+		UpdateDiff();
 	}
 }
 
@@ -495,6 +505,7 @@ void MainWindow::Load()
 
 	SetWindowText(wnd, (std::wstring(L"Petty Cash") + tmpTitle).c_str());
 	edTotalAssigned->SetText(settings.GetStringAmount());
+	edTotalAssigned->Disable();
 
 	Department departments;
 	departments.Load();
@@ -515,7 +526,7 @@ void MainWindow::Load()
 	}
 }
 
-void MainWindow::UpdateTotals()
+void MainWindow::UpdateSum()
 {
 	// Sum 
 	double totalReq = pettyCash.GetTotal();
@@ -523,10 +534,19 @@ void MainWindow::UpdateTotals()
 	double cash = std::stod(edCash->GetText());
 	double pendInv = std::stod(edPendInv->GetText());
 	double sum = totalReq + pendRecv + cash + pendInv;
+	edTotalSum->Enable();
 	edTotalSum->SetText(utilities::format_decimal(sum));
+	edTotalSum->Disable();
+}
+
+void MainWindow::UpdateDiff()
+{
 	// Difference
+	double sum = std::stod(edTotalSum->GetText());
 	double loan = std::stod(edLoan->GetText());
 	double totalAssigned = std::stod(edTotalAssigned->GetText());
-	double difference = totalAssigned - sum + loan;
+	double difference = (sum + loan) - totalAssigned;
+	edDiff->Enable();
 	edDiff->SetText(utilities::format_decimal(difference));
+	edDiff->Disable();
 }

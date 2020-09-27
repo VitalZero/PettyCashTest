@@ -39,7 +39,8 @@ private:
 	void CreateControls();
 	void CreateMainMenu();
 	void Load();
-	void UpdateTotals();
+	void UpdateDiff();
+	void UpdateSum();
 	// Commands
 	void OnExit();
 	void OnNew();
