@@ -90,16 +90,12 @@ void MainWindow::ResetTotalFields()
 	edCash->SetText(L"0");
 	edPendInv->SetText(L"0");
 
-	edTotalSum->Enable();
 	edTotalSum->SetText(L"0");
-	edTotalSum->Disable();
 
 	edPendRecv->SetText(L"0");
 	edLoan->SetText(L"0");
 
-	edDiff->Enable();
 	edDiff->SetText(L"0");
-	edDiff->Disable();
 }
 
 LRESULT MainWindow::OnCreate(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -154,7 +150,7 @@ LRESULT MainWindow::OnCommand(HWND wnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	if (HIWORD(wparam) == EN_KILLFOCUS)
 	{
-		OnEnUpdate(LOWORD(wparam));
+		OnEnUpdate((UINT)LOWORD(wparam));
 	}
 	else
 	{
@@ -388,7 +384,7 @@ void MainWindow::CreateControls()
 	edPendInv->Create(wnd, EDPENDINV, 619, 253, 92);
 	lbTotalSum = std::make_unique<Label>();
 	lbTotalSum->Create(wnd, STATICLB, L"Suma", 470, 284, 120, 15);
-	edTotalSum = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
+	edTotalSum = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT | WS_DISABLED);
 	edTotalSum->Create(wnd, EDTOTALSUM, 619, 279, 92);
 
 	lbLoan = std::make_unique<Label>();
@@ -397,11 +393,11 @@ void MainWindow::CreateControls()
 	edLoan->Create(wnd, EDLOAN, 619, 320, 92);
 	lbTotalAssigned = std::make_unique<Label>();
 	lbTotalAssigned->Create(wnd, STATICLB, L"Total fondo asignado", 470, 350, 120, 15);
-	edTotalAssigned = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
+	edTotalAssigned = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT | WS_DISABLED);
 	edTotalAssigned->Create(wnd, EDTOTALASSIGNED, 619, 346, 92);
 	lbDiff = std::make_unique<Label>();
 	lbDiff->Create(wnd, STATICLB, L"Diferencia", 470, 376, 120, 15);
-	edDiff = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
+	edDiff = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT | WS_DISABLED);
 	edDiff->Create(wnd, EDDIFF, 619, 372, 92);
 	
 	ResetTotalFields();
@@ -478,6 +474,12 @@ void MainWindow::OnAddAccount()
 	DialogBoxParam(instance, MAKEINTRESOURCE(IDD_ADDACCOUNT), wnd, (DLGPROC)Account::StaticAccountDlgProc, (LPARAM)accounts.get());
 }
 
+void MainWindow::OnAbout()
+{
+	ShellAbout(wnd, L"Petty cash#Jonathan Michel. All Rights reserved.", L"This software is distributed as is, without any warranties",
+		LoadIcon(instance, MAKEINTRESOURCE(IDI_MAIN)));
+}
+
 void MainWindow::OnEnUpdate(UINT idCtrl)
 {
 	if (idCtrl == EDTOTALREQ ||
@@ -507,7 +509,6 @@ void MainWindow::Load()
 
 	SetWindowText(wnd, (std::wstring(L"Petty Cash") + tmpTitle).c_str());
 	edTotalAssigned->SetText(settings.GetStringAmount());
-	edTotalAssigned->Disable();
 
 	Department departments;
 	departments.Load();
@@ -536,9 +537,7 @@ void MainWindow::UpdateSum()
 	double cash = std::stod(edCash->GetText());
 	double pendInv = std::stod(edPendInv->GetText());
 	double sum = totalReq + pendRecv + cash + pendInv;
-	edTotalSum->Enable();
 	edTotalSum->SetText(utilities::format_decimal(sum));
-	edTotalSum->Disable();
 }
 
 void MainWindow::UpdateDiff()
@@ -548,7 +547,5 @@ void MainWindow::UpdateDiff()
 	double loan = std::stod(edLoan->GetText());
 	double totalAssigned = std::stod(edTotalAssigned->GetText());
 	double difference = (sum + loan) - totalAssigned;
-	edDiff->Enable();
 	edDiff->SetText(utilities::format_decimal(difference));
-	edDiff->Disable();
 }
