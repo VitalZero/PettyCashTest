@@ -384,7 +384,7 @@ void MainWindow::CreateControls()
 	edPendInv->Create(wnd, EDPENDINV, 619, 253, 92);
 	lbTotalSum = std::make_unique<Label>();
 	lbTotalSum->Create(wnd, STATICLB, L"Suma", 470, 284, 120, 15);
-	edTotalSum = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT | WS_DISABLED);
+	edTotalSum = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edTotalSum->Create(wnd, EDTOTALSUM, 619, 279, 92);
 
 	lbLoan = std::make_unique<Label>();
@@ -393,11 +393,11 @@ void MainWindow::CreateControls()
 	edLoan->Create(wnd, EDLOAN, 619, 320, 92);
 	lbTotalAssigned = std::make_unique<Label>();
 	lbTotalAssigned->Create(wnd, STATICLB, L"Total fondo asignado", 470, 350, 120, 15);
-	edTotalAssigned = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT | WS_DISABLED);
+	edTotalAssigned = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edTotalAssigned->Create(wnd, EDTOTALASSIGNED, 619, 346, 92);
 	lbDiff = std::make_unique<Label>();
 	lbDiff->Create(wnd, STATICLB, L"Diferencia", 470, 376, 120, 15);
-	edDiff = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT | WS_DISABLED);
+	edDiff = std::make_unique<Editbox>(WS_TABSTOP | WS_CHILD | WS_VISIBLE | ES_RIGHT);
 	edDiff->Create(wnd, EDDIFF, 619, 372, 92);
 	
 	ResetTotalFields();

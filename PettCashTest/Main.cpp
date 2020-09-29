@@ -31,7 +31,7 @@ int APIENTRY wWinMain(HINSTANCE, HINSTANCE, LPWSTR, int)
 	}
 	catch (...)
 	{
-		MessageBoxA(0, "Excepción no capturada", "Error!!", MB_ICONERROR);
+		MessageBox(0, L"Excepción no capturada", L"Error!!", MB_ICONERROR);
 	}
 
 	return 0;
